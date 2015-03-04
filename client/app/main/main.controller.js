@@ -4,6 +4,7 @@ angular.module('tweetWorldApp')
   .controller('MainCtrl', function ($scope, $http, socket) {
     $scope.tweets = [];
     $scope.searchText = '';
+    $scope.currentSearch = '';
 
     $scope.searchTweets = function() {
       if ($scope.searchText === '') {
@@ -12,8 +13,16 @@ angular.module('tweetWorldApp')
 
       console.log('creating new search for: ' + $scope.searchText);
 
+      // remove the old search stream if it exists
+      if ($scope.currentSearch != '') {
+        socket.socket.emit('remove', $scope.currentSearch);
+      }
+
       // tell the server to start a tweet stream
       socket.socket.emit('q', $scope.searchText);
+
+      // update the current search
+      $scope.currentSearch = $scope.searchText;
 
       // reset the tweets and search text
       $scope.tweets = [];
@@ -28,7 +37,6 @@ angular.module('tweetWorldApp')
          }
          */
         $scope.tweets.push(tweet);
-        $scope.$apply();
       });
 
     };
