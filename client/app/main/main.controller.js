@@ -13,11 +13,6 @@ angular.module('tweetWorldApp')
 
       console.log('creating new search for: ' + $scope.searchText);
 
-      // remove the old search stream if it exists
-      if ($scope.currentSearch != '') {
-        socket.socket.emit('remove', $scope.currentSearch);
-      }
-
       // tell the server to start a tweet stream
       socket.socket.emit('q', $scope.searchText);
 

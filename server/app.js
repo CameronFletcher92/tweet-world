@@ -50,53 +50,49 @@ var T = new Twit({
 
 // Sockets
 socketio.on('connection', function(socket) {
-  searches[socket.id] = {};
+
   socket.on('q', function(q) {
-
-    if (!searches[socket.id][q]) {
-      console.log('New Search >>', q);
-
-      var stream = T.stream('statuses/filter', {
-        track: q
-      });
-
-      stream.on('tweet', function(tweet) {
-        socket.emit('tweet', tweet);
-      });
-
-      stream.on('limit', function(limitMessage) {
-        console.log('Limit for User : ' + socket.id + ' on query ' + q + ' has reached!');
-      });
-
-      stream.on('warning', function(warning) {
-        console.log('warning', warning);
-      });
-
-      stream.on('reconnect', function(request, response, connectInterval) {
-        console.log('reconnect :: connectInterval', connectInterval)
-      });
-
-      stream.on('disconnect', function(disconnectMessage) {
-        console.log('disconnect', disconnectMessage);
-      });
-
-      searches[socket.id][q] = stream;
+    // stop the old stream if it exists
+    if (searches[socket.id]) {
+      searches[socket.id].stop();
+      delete searches[socket.id];
     }
-  });
 
-  socket.on('remove', function(q) {
-    searches[socket.id][q].stop();
-    delete searches[socket.id][q];
-    console.log('Removed Search >>', q);
+    console.log('New Search >>', q);
+    var stream = T.stream('statuses/filter', {
+      track: q
+    });
+
+    stream.on('tweet', function(tweet) {
+      socket.emit('tweet', tweet);
+    });
+
+    stream.on('limit', function(limitMessage) {
+      console.log('Limit for User : ' + socket.id + ' on query ' + q + ' has reached!');
+    });
+
+    stream.on('warning', function(warning) {
+      console.log('warning', warning);
+    });
+
+    stream.on('reconnect', function(request, response, connectInterval) {
+      console.log('stream reconnecting in ' + connectInterval + ' (' + response.statusCode + ')');
+    });
+
+    stream.on('disconnect', function(disconnectMessage) {
+      console.log('disconnect', disconnectMessage);
+    });
+
+    searches[socket.id] = stream;
+
   });
 
   socket.on('disconnect', function() {
-    for (var k in searches[socket.id]) {
-      searches[socket.id][k].stop();
-      delete searches[socket.id][k];
+    // stop the old stream if it exists
+    if (searches[socket.id]) {
+      searches[socket.id].stop();
+      delete searches[socket.id];
     }
-    delete searches[socket.id];
-    console.log('Removed All Search from user >>', socket.id);
   });
 
 });
