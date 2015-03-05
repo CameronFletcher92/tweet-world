@@ -1,10 +1,12 @@
 'use strict';
 
 angular.module('tweetWorldApp')
-  .controller('MainCtrl', function ($scope, $http, socket) {
+  .controller('MainCtrl', function ($scope, $http, socket, Tweet) {
     $scope.tweets = [];
     $scope.searchText = '';
     $scope.currentSearch = '';
+
+    var res = Tweet.get();
 
     $scope.searchTweets = function() {
       if ($scope.searchText === '') {
