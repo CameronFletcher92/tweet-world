@@ -50,6 +50,7 @@ module.exports = function(socketio) {
         // format the tweet to match our db
         var formattedTweet = {
           query: searches[socket.id].query,
+          tweetId: tweet.id,
           userpic: tweet.user.profile_image_url,
           text: tweet.text,
           geo: tweet.coordinates.coordinates,

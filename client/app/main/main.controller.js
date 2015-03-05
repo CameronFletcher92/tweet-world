@@ -2,16 +2,10 @@
 
 angular.module('tweetWorldApp')
   .controller('MainCtrl', function ($scope, $http, socket, Tweet) {
+    // scope variables
     $scope.tweets = [];
     $scope.searchText = '';
     $scope.currentSearch = '';
-
-    // load cached tweets
-    /*
-    var tweets = Tweet.query(function () {
-      console.log(tweets);
-    });
-    */
 
     $scope.searchTweets = function() {
       if ($scope.searchText === '') {
@@ -27,13 +21,21 @@ angular.module('tweetWorldApp')
       $scope.currentSearch = $scope.searchText;
 
       // reset the tweets and search text
-      $scope.tweets = [];
+      $scope.tweets.length = 0;
+      //$scope.tweets = [];
       $scope.searchText = '';
 
-      // when a tweet is pushed, push it onto the list of tweets
-      socket.socket.on('tweet', function(tweet) {
-        $scope.tweets.push(tweet);
-      });
-
     };
+
+    // when a tweet is pushed, prepend it to the tweets
+    socket.socket.on('tweet', function(tweet) {
+      $scope.tweets.unshift(tweet);
+    });
+
+    // load cached tweets
+    /*
+    var tweets = Tweet.query(function () {
+      console.log(tweets);
+    });
+    */
   });

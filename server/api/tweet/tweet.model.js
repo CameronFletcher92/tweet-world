@@ -5,6 +5,7 @@ var mongoose = require('mongoose'),
 
 var TweetSchema = new Schema({
   query: String,
+  tweetId: String,
   userpic: String,
   text: String,
   geo: [Number],

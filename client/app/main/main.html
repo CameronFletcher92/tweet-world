@@ -3,6 +3,7 @@
 <header class="hero-unit" id="banner">
   <div class="container">
     <h1>Tweet World</h1>
+
     <p class="lead">Mine Tweets in Real-Time</p>
     <i class="fa fa-twitter-square fa-5x"></i>
   </div>
@@ -11,6 +12,7 @@
 <div class="container">
   <form class="thing-form">
     <label>Syncs in realtime from twitter</label>
+
     <p class="input-group">
       <input type="text" class="form-control" placeholder="Search tweets" ng-model="searchText">
       <span class="input-group-btn">
@@ -19,14 +21,17 @@
     </p>
   </form>
 
-  <div class="row scrollable">
-    <div class="col-lg-12">
-      <h2 class="page-header" ng-show="currentSearch">Showing results for '{{currentSearch}}':</h2>
-      <ul class="list-group" ng-repeat="tweet in tweets | orderBy: '-date'">
-      <!--<ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-6" ng-repeat="tweet in tweets">-->
+  <div class="row col-lg-12">
+    <h2 class="page-header" ng-show="currentSearch">Showing {{tweets.length}} results for '{{currentSearch}}':</h2>
+
+    <div class="scrollable">
+      <ul class="list-group" ng-repeat="tweet in tweets">
         <li class="list-group-item">
           <span>
             <img ng-src="{{tweet.userpic}}">
+          </span>
+          <span>
+            ({{tweet.geo}})
           </span>
           <span>
             {{tweet.text}}
@@ -35,7 +40,6 @@
       </ul>
     </div>
   </div>
-
 </div>
 
 <footer class="footer">
