@@ -41,9 +41,10 @@ module.exports = function(socketio) {
 
       // set up the stream handlers
       stream.on('tweet', function(tweet) {
-        // ignore tweets without location
+        // ignore tweets/set their co-ords to null if they don't have location
         if (!tweet.coordinates) {
-          return;
+          //return;
+          tweet.coordinates = {coordinates: []};
         }
 
         // format the tweet to match our db

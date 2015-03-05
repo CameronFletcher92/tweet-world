@@ -8,5 +8,6 @@ module.exports = {
     uri: 'mongodb://localhost/tweetworld-dev'
   },
 
-  seedDB: false
+  // reset the db on server quit
+  seedDB: true
 };
