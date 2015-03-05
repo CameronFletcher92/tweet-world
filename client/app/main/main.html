@@ -22,7 +22,7 @@
   <div class="row scrollable">
     <div class="col-lg-12">
       <h2 class="page-header" ng-show="currentSearch">Showing results for '{{currentSearch}}':</h2>
-      <ul class="list-group" ng-repeat="tweet in tweets">
+      <ul class="list-group" ng-repeat="tweet in tweets | orderBy: '-date'">
       <!--<ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-6" ng-repeat="tweet in tweets">-->
         <li class="list-group-item">
           <span>

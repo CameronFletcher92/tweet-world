@@ -30,12 +30,6 @@ angular.module('tweetWorldApp')
 
       // when a tweet is pushed, push it onto the list of tweets
       socket.socket.on('tweet', function(tweet) {
-        console.log('tweet received: ' + tweet.id);
-        /*
-         if ($scope.tweets.length == 10) {
-         $scope.tweets.shift();
-         }
-         */
         $scope.tweets.push(tweet);
       });
 

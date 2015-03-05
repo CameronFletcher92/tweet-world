@@ -19,12 +19,18 @@ module.exports = function(socketio) {
     socket.on('query', function(q) {
       // stop the old stream if it exists
       if (searches[socket.id]) {
-        console.log("stopping stream on socket: " + socket.id)
+        console.log("stopping stream on socket: " + socket.id);
         searches[socket.id].stop();
         delete searches[socket.id];
       }
 
       console.log("creating stream on socket: " + socket.id + ", query: " + q);
+
+      /* not working at the moment
+      var aus = [ '-37.5050', '140.999', '-28.157', '153.638824'];
+      var sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ];
+      */
+
       var stream = T.stream('statuses/filter', {
         track: q
       });
