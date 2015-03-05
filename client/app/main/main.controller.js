@@ -6,11 +6,10 @@ angular.module('tweetWorldApp')
     $scope.searchText = '';
     $scope.currentSearch = '';
 
-    /*
+    // load cached tweets
     var tweets = Tweet.query(function () {
       console.log(tweets);
     });
-    */
 
     $scope.searchTweets = function() {
       if ($scope.searchText === '') {

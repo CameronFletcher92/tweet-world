@@ -5,6 +5,41 @@
 
 'use strict';
 
+var Tweet = require('../api/tweet/tweet.model');
+
+Tweet.find({}).remove(function() {
+  Tweet.create({
+    userpic: "some image",
+    text: "a test tweet",
+    geo: [100,200],
+    date: Date.now()
+  }, {
+    userpic: "some image",
+    text: "a test tweet",
+    geo: [100,200],
+    date: Date.now()
+  }, {
+    userpic: "some image",
+    text: "a test tweet",
+    geo: [100,200],
+    date: Date.now()
+  },  {
+    userpic: "some image",
+    text: "a test tweet",
+    geo: [100,200],
+    date: Date.now()
+  },  {
+    userpic: "some image",
+    text: "a test tweet",
+    geo: [100,200],
+    date: Date.now()
+  },{
+    userpic: "some image",
+    text: "a test tweet",
+    geo: [100,200],
+    date: Date.now()
+  });
+});
 /*
 var Thing = require('../api/thing/thing.model');
 

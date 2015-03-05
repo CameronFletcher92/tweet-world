@@ -7,7 +7,6 @@ var TweetSchema = new Schema({
   userpic: String,
   text: String,
   geo: [Number],
-  name: String,
   date: Date
 });
 
