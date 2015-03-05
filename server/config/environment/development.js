@@ -8,5 +8,5 @@ module.exports = {
     uri: 'mongodb://localhost/tweetworld-dev'
   },
 
-  seedDB: true
+  seedDB: false
 };
