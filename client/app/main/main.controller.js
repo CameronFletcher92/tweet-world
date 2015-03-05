@@ -6,7 +6,11 @@ angular.module('tweetWorldApp')
     $scope.searchText = '';
     $scope.currentSearch = '';
 
-    var res = Tweet.get();
+    /*
+    var tweets = Tweet.query(function () {
+      console.log(tweets);
+    });
+    */
 
     $scope.searchTweets = function() {
       if ($scope.searchText === '') {
