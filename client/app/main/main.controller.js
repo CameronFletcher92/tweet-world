@@ -14,7 +14,7 @@ angular.module('tweetWorldApp')
       console.log('creating new search for: ' + $scope.searchText);
 
       // tell the server to start a tweet stream
-      socket.socket.emit('q', $scope.searchText);
+      socket.socket.emit('query', $scope.searchText);
 
       // update the current search
       $scope.currentSearch = $scope.searchText;
@@ -35,29 +35,4 @@ angular.module('tweetWorldApp')
       });
 
     };
-
-    /*
-    $scope.awesomeThings = [];
-
-    $http.get('/api/things').success(function(awesomeThings) {
-      $scope.awesomeThings = awesomeThings;
-      socket.syncUpdates('thing', $scope.awesomeThings);
-    });
-
-    $scope.addThing = function() {
-      if($scope.newThing === '') {
-        return;
-      }
-      $http.post('/api/things', { name: $scope.newThing });
-      $scope.newThing = '';
-    };
-
-    $scope.deleteThing = function(thing) {
-      $http.delete('/api/things/' + thing._id);
-    };
-
-    $scope.$on('$destroy', function () {
-      socket.unsyncUpdates('thing');
-    });
-    */
   });
