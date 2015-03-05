@@ -4,6 +4,7 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var TweetSchema = new Schema({
+  query: String,
   userpic: String,
   text: String,
   geo: [Number],

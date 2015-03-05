@@ -20,7 +20,7 @@ module.exports = function(socketio) {
       // stop the old stream if it exists
       if (searches[socket.id]) {
         console.log("stopping stream on socket: " + socket.id);
-        searches[socket.id].stop();
+        searches[socket.id].stream.stop();
         delete searches[socket.id];
       }
 
@@ -35,6 +35,11 @@ module.exports = function(socketio) {
         track: q
       });
 
+      // store the running stream for the user
+      searches[socket.id] = {stream: stream, query: q.toLowerCase()};
+
+
+      // set up the stream handlers
       stream.on('tweet', function(tweet) {
         // ignore tweets without location
         if (!tweet.coordinates) {
@@ -43,6 +48,7 @@ module.exports = function(socketio) {
 
         // format the tweet to match our db
         var formattedTweet = {
+          query: searches[socket.id].query,
           userpic: tweet.user.profile_image_url,
           text: tweet.text,
           geo: tweet.coordinates.coordinates,
@@ -78,16 +84,14 @@ module.exports = function(socketio) {
       stream.on('disconnect', function(disconnectMessage) {
         console.log('disconnect', disconnectMessage);
       });
-
-      searches[socket.id] = stream;
-
     });
 
+    // socket disconnect, make sure the stream is stopped
     socket.on('disconnect', function() {
       // stop the old stream if it exists
       if (searches[socket.id]) {
         console.log("stopping stream on socket: " + socket.id)
-        searches[socket.id].stop();
+        searches[socket.id].stream.stop();
         delete searches[socket.id];
       }
     });
