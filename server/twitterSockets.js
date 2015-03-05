@@ -1,6 +1,9 @@
 'use strict';
+
+
 module.exports = function(socketio) {
   var Twit = require('twit');
+  var Tweet = require('./api/tweet/tweet.model');
   var searches = {};
 
   var T = new Twit({
@@ -27,13 +30,24 @@ module.exports = function(socketio) {
       });
 
       stream.on('tweet', function(tweet) {
-        var msg = {
-          id: tweet.id,
+        // ignore tweets without location
+        if (!tweet.coordinates) {
+          return;
+        }
+
+        // format the tweet to match our db
+        var formattedTweet = {
+          userpic: tweet.user.profile_image_url,
           text: tweet.text,
-          geo: tweet.geo,
-          user: tweet.user
+          geo: tweet.coordinates.coordinates,
+          date: tweet.created_at
         };
-        socket.emit('tweet', msg);
+
+        // cache the tweet
+        Tweet.create(formattedTweet);
+
+        // emit message to clients
+        socket.emit('tweet', formattedTweet);
       });
 
 
