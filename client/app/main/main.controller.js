@@ -33,7 +33,7 @@ angular.module('tweetWorldApp')
     socket.on('tweets-existing', function(tweets){
       console.log(tweets.length + " initial tweets loaded");
       console.log(tweets);
-      $scope.tweets.push(tweets);
+      $scope.tweets.unshift(tweets);
     });
 
     // when a tweet is pushed, prepend it to the tweets

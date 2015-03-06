@@ -48,9 +48,9 @@ module.exports = function(socketio) {
       T.get('search/tweets', { q: queryText, count:100 }, function(err, data, response) {
         if (err) {
           console.log(err);
-        } else if (data) {
-          console.log(data);
+          return;
         }
+
         var tweets = data.statuses;
         var formattedTweets = [];
 
@@ -60,10 +60,10 @@ module.exports = function(socketio) {
         }
 
         // emit the initial tweets to the client
-        console.log("sending " + formattedTweets.length + " initial tweets to the client");
-
-        // now setup a stream for the client here instead of at the same time
-
+        if (formattedTweets.length > 0) {
+          console.log("sending " + formattedTweets.length + " initial tweets to the client");
+          socket.emit('tweets-existing', formattedTweets);
+        }
       });
 
 
