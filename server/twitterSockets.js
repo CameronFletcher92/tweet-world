@@ -45,7 +45,7 @@ module.exports = function(socketio) {
       // first, get the inital query
       var queryText = q + ' since:' + date;
       console.log(queryText);
-      T.get('search/tweets', { q: queryText }, function(err, data, response) {
+      T.get('search/tweets', { q: queryText, count:100 }, function(err, data, response) {
         if (err) {
           console.log(err);
         } else if (data) {
@@ -61,7 +61,9 @@ module.exports = function(socketio) {
 
         // emit the initial tweets to the client
         console.log("sending " + formattedTweets.length + " initial tweets to the client");
-        socket.emit('tweets-existing', formattedTweets);
+
+        // now setup a stream for the client here instead of at the same time
+
       });
 
 

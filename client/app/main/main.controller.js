@@ -38,8 +38,6 @@ angular.module('tweetWorldApp')
 
     // when a tweet is pushed, prepend it to the tweets
     socket.on('tweet-live', function(tweet) {
-      console.log("new tweet received");
-      console.log(tweet);
       $scope.tweets.unshift(tweet);
     });
 
