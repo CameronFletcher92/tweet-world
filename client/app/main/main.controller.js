@@ -38,4 +38,20 @@ angular.module('tweetWorldApp')
       console.log(tweets);
     });
     */
+
+
+    /* date time picker stuff */
+    //$scope.dt = new Date();
+    $scope.dt = null;
+    $scope.opened = false;
+    $scope.maxDate = new Date();
+    $scope.minDate = $scope.maxDate.getDate() - 7;
+
+    $scope.open = function($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+
+      $scope.opened = true;
+    };
+
   });

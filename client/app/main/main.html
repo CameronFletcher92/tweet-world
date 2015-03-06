@@ -19,6 +19,13 @@
         <button type="submit" class="btn btn-primary" ng-click="searchTweets()">Search</button>
       </span>
     </p>
+
+    <p class="input-group">
+      <input type="text" class="form-control" datepicker-popup="dd-MMMM-yyyy" ng-model="dt" is-open="opened" max-date="maxDate" close-text="Close" />
+      <span class="input-group-btn">
+        <button type="button" class="btn btn-default" ng-click="open($event)"><i class="fa fa-calendar"/></button>
+      </span>
+    </p>
   </form>
 
   <div class="row col-lg-12">
