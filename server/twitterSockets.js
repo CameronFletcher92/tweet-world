@@ -43,9 +43,7 @@ module.exports = function(socketio) {
       }
 
       // first, get the inital query
-      var now = new Date();
-      console.log(now.toDateString());
-      var queryText = q + ' since:' + date + ' until:' + now;
+      var queryText = q + ' since:' + date;
       console.log(queryText);
       T.get('search/tweets', { q: queryText }, function(err, data, response) {
         if (err) {
