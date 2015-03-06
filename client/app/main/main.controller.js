@@ -15,23 +15,34 @@ angular.module('tweetWorldApp')
 
       console.log('creating new search for: ' + $scope.searchText);
 
-      // tell the server to start a tweet stream
-      socket.socket.emit('query', $scope.searchText);
+      // reset the tweets
+      $scope.tweets.length = 0;
+
+      // tell the server to get the initial tweets then setup stream
+      console.log($scope.searchDate);
+      socket.emit('query', $scope.searchText, $scope.searchDate);
 
       // update the current search
       $scope.currentSearch = $scope.searchText;
 
-      // reset the tweets and search text
-      $scope.tweets.length = 0;
-      //$scope.tweets = [];
+      // reset the search text
       $scope.searchText = '';
-
     };
 
+    // when the initial tweets are received, prepend them
+    socket.on('tweets-existing', function(tweets){
+      console.log(tweets.length + " initial tweets loaded");
+      console.log(tweets);
+      $scope.tweets.push(tweets);
+    });
+
     // when a tweet is pushed, prepend it to the tweets
-    socket.socket.on('tweet', function(tweet) {
+    socket.on('tweet-live', function(tweet) {
+      console.log("new tweet received");
+      console.log(tweet);
       $scope.tweets.unshift(tweet);
     });
+
 
     // load cached tweets
     /*

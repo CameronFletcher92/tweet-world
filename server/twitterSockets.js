@@ -13,10 +13,28 @@ module.exports = function(socketio) {
     access_token_secret:  'KgDPamWRmLlF8mAemSqvsO2fzL3gCpoh24a87O4RGaAUH'
   });
 
+  function formatTweet(queryText, tweet) {
+    var fTweet =  {
+      query: queryText,
+      tweetId: tweet.id,
+      userpic: tweet.user.profile_image_url,
+      text: tweet.text,
+      date: tweet.created_at
+    };
+
+    if (tweet.coordinates) {
+      fTweet.geo = tweet.coordinates.coordinates;
+    } else {
+      fTweet.geo = null;
+    }
+
+    return fTweet;
+  }
+
+
 // Sockets
   socketio.on('connection', function(socket) {
-
-    socket.on('query', function(q) {
+    socket.on('query', function(q, date) {
       // stop the old stream if it exists
       if (searches[socket.id]) {
         console.log("stopping stream on socket: " + socket.id);
@@ -24,13 +42,38 @@ module.exports = function(socketio) {
         delete searches[socket.id];
       }
 
-      console.log("creating stream on socket: " + socket.id + ", query: " + q);
+      // first, get the inital query
+      var now = new Date();
+      console.log(now.toDateString());
+      var queryText = q + ' since:' + date + ' until:' + now;
+      console.log(queryText);
+      T.get('search/tweets', { q: queryText }, function(err, data, response) {
+        if (err) {
+          console.log(err);
+        } else if (data) {
+          console.log(data);
+        }
+        var tweets = data.statuses;
+        var formattedTweets = [];
+
+        // format the tweets
+        for (var i = 0; i < tweets.length; i++) {
+          formattedTweets.push(formatTweet(searches[socket.id].query, tweets[i]));
+        }
+
+        // emit the initial tweets to the client
+        console.log("sending " + formattedTweets.length + " initial tweets to the client");
+        socket.emit('tweets-existing', formattedTweets);
+      });
+
 
       /* not working at the moment
       var aus = [ '-37.5050', '140.999', '-28.157', '153.638824'];
       var sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ];
       */
 
+      // now set up the live stream
+      console.log("creating stream on socket: " + socket.id + ", query: " + q);
       var stream = T.stream('statuses/filter', {
         track: q
       });
@@ -38,30 +81,16 @@ module.exports = function(socketio) {
       // store the running stream for the user
       searches[socket.id] = {stream: stream, query: q.toLowerCase()};
 
-
       // set up the stream handlers
       stream.on('tweet', function(tweet) {
-        // ignore tweets/set their co-ords to null if they don't have location
-        if (!tweet.coordinates) {
-          //return;
-          tweet.coordinates = {coordinates: []};
-        }
-
         // format the tweet to match our db
-        var formattedTweet = {
-          query: searches[socket.id].query,
-          tweetId: tweet.id,
-          userpic: tweet.user.profile_image_url,
-          text: tweet.text,
-          geo: tweet.coordinates.coordinates,
-          date: tweet.created_at
-        };
+        var formattedTweet = formatTweet(searches[socket.id].query, tweet);
 
         // cache the tweet
-        Tweet.create(formattedTweet);
+        //Tweet.create(formattedTweet);
 
         // emit message to clients
-        socket.emit('tweet', formattedTweet);
+        socket.emit('tweet-live', formattedTweet);
       });
 
 
@@ -92,7 +121,7 @@ module.exports = function(socketio) {
     socket.on('disconnect', function() {
       // stop the old stream if it exists
       if (searches[socket.id]) {
-        console.log("stopping stream on socket: " + socket.id)
+        console.log("stopping stream on socket: " + socket.id);
         searches[socket.id].stream.stop();
         delete searches[socket.id];
       }
