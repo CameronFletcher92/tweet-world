@@ -1,4 +1,4 @@
-<div ng-include="'components/navbar/navbar.html'"></div>
+<!--<div ng-include="'components/navbar/navbar.html'"></div>-->
 
 <header class="hero-unit" id="banner">
   <div class="container">
@@ -9,46 +9,51 @@
   </div>
 </header>
 
-<div class="container">
-  <form class="thing-form">
-    <label>Syncs in realtime from twitter</label>
+<!-- The content -->
+<md-content layout="column" layout-align="center" layout-margin layout-padding>
 
-    <p class="input-group">
-      <input type="text" class="form-control" placeholder="Search tweets" ng-model="searchText">
-      <span class="input-group-btn">
-        <button type="submit" class="btn btn-primary" ng-click="searchTweets()">Search</button>
-      </span>
-    </p>
+  <!-- The input form -->
+  <form>
+    <!-- row with the 2 input boxes -->
+    <div layout="row" layout-align="center">
+      <md-input-container layout-margin style="width: 60%">
+        <label>Search for a keyword</label>
+        <input ng-model="searchText" />
+      </md-input-container>
+      <md-input-container layout-margin>
+        <label>Include tweets after:</label>
+        <input type="date" ng-model="searchDate" />
+      </md-input-container>
+    </div>
 
-    <p class="input-group">
-      <input type="text" class="form-control" datepicker-popup="dd-MMMM-yyyy" ng-model="dt" is-open="opened" max-date="maxDate" close-text="Close" />
-      <span class="input-group-btn">
-        <button type="button" class="btn btn-default" ng-click="open($event)"><i class="fa fa-calendar"/></button>
-      </span>
-    </p>
+    <!-- row with the button -->
+    <div layout="row" layout-align="center center">
+      <md-button class="md-raised md-primary" ng-click="searchTweets()">Search</md-button>
+    </div>
   </form>
 
-  <div class="row col-lg-12">
-    <h2 class="page-header" ng-show="currentSearch">Showing {{tweets.length}} results for '{{currentSearch}}':</h2>
+  <!-- The tweet list -->
+  <md-content layout="column" layout-align="center" layout-margin layout-padding>
+    <h3 class="page-header" ng-show="currentSearch">Showing {{tweets.length}} results for '{{currentSearch}}':</h3>
 
-    <div class="scrollable">
-      <ul class="list-group" ng-repeat="tweet in tweets">
-        <li class="list-group-item">
-          <span>
+    <md-list class="scrollable" layout-align="center" layout-margin layout-padding>
+      <md-card ng-repeat="tweet in tweets">
+        <md-item-content layout-margin layout-padding>
+          <div class="md-tile-left" layout-margin>
             <img ng-src="{{tweet.userpic}}">
-          </span>
-          <span>
-            ({{tweet.geo}})
-          </span>
-          <span>
-            {{tweet.text}}
-          </span>
-        </li>
-      </ul>
-    </div>
-  </div>
-</div>
+          </div>
+          <div class="md-tile-content" layout-margin layout-padding>
+            <h3>{{tweet.text}}</h3>
+            <p ng-show="tweet.geo.length != 0"> ({{tweet.geo}})</p>
+          </div>
+        </md-item-content>
+      </md-card>
+    </md-list>
+  </md-content>
+</md-content>
 
+
+<!-- the footer -->
 <footer class="footer">
   <div class="container">
     <p>
