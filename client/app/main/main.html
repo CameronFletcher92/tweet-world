@@ -18,23 +18,28 @@
     <div layout="row" layout-align="center">
       <md-input-container layout-margin style="width: 60%">
         <label>Search for a keyword</label>
-        <input ng-model="searchText" />
+        <input ng-model="searchText" ng-disabled="isSearching" />
       </md-input-container>
       <md-input-container layout-margin>
         <label>Include tweets after:</label>
-        <input type="date" ng-model="searchDate" />
+        <input type="date" ng-model="searchDate" ng-disabled="isSearching" />
       </md-input-container>
     </div>
 
     <!-- row with the button -->
-    <div layout="row" layout-align="center center">
-      <md-button class="md-raised md-primary" ng-click="searchTweets()">Search</md-button>
+    <div layout="row" layout-align="center center" layout-margin>
+      <div layout-margin>
+        <md-button class="md-raised md-primary" ng-disabled="isSearching" ng-click="searchTweets()">Search</md-button>
+      </div>
+      <div layout-margin>
+        <md-button class="md-raised md-primary" ng-disabled="!isSearching" ng-click="stopTweets()">Stop</md-button>
+      </div>
     </div>
   </form>
 
   <!-- The tweet list -->
-  <md-content layout="column" layout-align="center" layout-margin layout-padding>
-    <h3 class="page-header" ng-show="currentSearch">Showing {{tweets.length}} results for '{{currentSearch}}':</h3>
+  <md-content layout="column" layout-align="center" layout-margin layout-padding ng-show="tweetCount">
+    <h3>Showing {{tweetCount}} results for '{{currentSearch}}':</h3>
 
     <md-list class="scrollable" layout-align="center" layout-margin layout-padding>
       <md-card ng-repeat="tweet in tweets">
@@ -44,7 +49,7 @@
           </div>
           <div class="md-tile-content" layout-margin layout-padding>
             <h3>{{tweet.text}}</h3>
-            <p ng-show="tweet.geo.length != 0"> ({{tweet.geo}})</p>
+            <p ng-show="tweet.geo"> ({{tweet.geo[0]}}, {{tweet.geo[1]}})</p>
           </div>
         </md-item-content>
       </md-card>

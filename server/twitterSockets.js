@@ -22,6 +22,7 @@ module.exports = function(socketio) {
       date: tweet.created_at
     };
 
+    // set geo as null if there are no coordinates
     if (tweet.coordinates) {
       fTweet.geo = tweet.coordinates.coordinates;
     } else {
@@ -34,38 +35,21 @@ module.exports = function(socketio) {
 
 // Sockets
   socketio.on('connection', function(socket) {
-    socket.on('query', function(q, date) {
+    socket.on('stopTweetStream', function(g) {
+      if (searches[socket.id]) {
+        console.log("stopping stream on socket: " + socket.id);
+        searches[socket.id].stream.stop();
+        delete searches[socket.id];
+      }
+    });
+
+    socket.on('startTweetStream', function(q) {
       // stop the old stream if it exists
       if (searches[socket.id]) {
         console.log("stopping stream on socket: " + socket.id);
         searches[socket.id].stream.stop();
         delete searches[socket.id];
       }
-
-      // first, get the inital query
-      var queryText = q + ' since:' + date;
-      console.log(queryText);
-      T.get('search/tweets', { q: queryText, count:100 }, function(err, data, response) {
-        if (err) {
-          console.log(err);
-          return;
-        }
-
-        var tweets = data.statuses;
-        var formattedTweets = [];
-
-        // format the tweets
-        for (var i = 0; i < tweets.length; i++) {
-          formattedTweets.push(formatTweet(searches[socket.id].query, tweets[i]));
-        }
-
-        // emit the initial tweets to the client
-        if (formattedTweets.length > 0) {
-          console.log("sending " + formattedTweets.length + " initial tweets to the client");
-          socket.emit('tweets-existing', formattedTweets);
-        }
-      });
-
 
       /* not working at the moment
       var aus = [ '-37.5050', '140.999', '-28.157', '153.638824'];
@@ -87,10 +71,10 @@ module.exports = function(socketio) {
         var formattedTweet = formatTweet(searches[socket.id].query, tweet);
 
         // cache the tweet
-        //Tweet.create(formattedTweet);
+        Tweet.create(formattedTweet);
 
         // emit message to clients
-        socket.emit('tweet-live', formattedTweet);
+        socket.emit('tweet', formattedTweet);
       });
 
 
