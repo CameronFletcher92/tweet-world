@@ -8,7 +8,7 @@ var TweetSchema = new Schema({
   tweetId: String,
   userpic: String,
   text: String,
-  geo: [Number],
+  geoPoint: { latitude: Number, longitude: Number},
   date: Date
 });
 

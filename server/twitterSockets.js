@@ -24,9 +24,9 @@ module.exports = function(socketio) {
 
     // set geo as null if there are no coordinates
     if (tweet.coordinates) {
-      fTweet.geo = tweet.coordinates.coordinates;
+      fTweet.geoPoint = {latitude: tweet.coordinates.latitude, longitude: tweet.coordinates.longitude};
     } else {
-      fTweet.geo = null;
+      fTweet.geoPoint = null;
     }
 
     return fTweet;
