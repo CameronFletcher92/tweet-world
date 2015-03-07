@@ -40,3 +40,9 @@ server.listen(config.port, config.ip, function () {
 exports = module.exports = app;
 
 
+// Error logging
+process.on('uncaughtException', function (exception) {
+  console.log(exception);
+});
+
+

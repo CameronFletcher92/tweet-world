@@ -1,5 +1,5 @@
 'use strict';
-var TWEET_LIMIT = 20;
+var TWEET_LIMIT = 1000;
 
 angular.module('tweetWorldApp')
   .controller('MainCtrl', function ($scope, $http, socket, Tweet) {
@@ -85,6 +85,7 @@ angular.module('tweetWorldApp')
 
     socket.on('limited', function() {
       $scope.stopTweets();
+      $scope.searchTweets();
       console.log("you just got limited fool");
     });
 

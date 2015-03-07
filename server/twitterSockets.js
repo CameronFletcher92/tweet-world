@@ -78,16 +78,8 @@ module.exports = function(socketio) {
           return;
         }
 
-        // cache the tweet
-        console.log("before");
-        console.log(formattedTweet);
-
+        // cache the tweet then emit it
         Tweet.create(formattedTweet, function(err, savedTweet) {
-          if (err) {
-            console.log(err);
-          }
-          console.log("after");
-          console.log(savedTweet);
           socket.emit('tweet', savedTweet);
         });
       });
