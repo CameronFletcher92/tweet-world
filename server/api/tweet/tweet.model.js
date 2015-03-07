@@ -5,11 +5,10 @@ var mongoose = require('mongoose'),
 
 var TweetSchema = new Schema({
   searchText: String,
-  tweetId: String,
   userpic: String,
-  text: String,
-  geoPoint: { latitude: Number, longitude: Number},
-  date: Date
+  text: { type: String, index: true },
+  coordinates: { type: [Number], index: '2dsphere' },
+  date: {type: Date, index: true }
 });
 
 module.exports = mongoose.model('Tweet', TweetSchema);

@@ -38,16 +38,12 @@
   </form>
 
   <!-- The map -->
-  <!--
   <md-content layout="column" layout-align="center center" layout-margin layout-padding>
     <ui-gmap-google-map center='map.center' zoom='map.zoom'>
-      <ui-gmap-markers models="tweets" idKey = "tweetId" coords="geoPoint" >
+      <ui-gmap-markers models="tweets" idKey = "'_id'" coords="'coordinates'" >
       </ui-gmap-markers>
     </ui-gmap-google-map>
   </md-content>
-  -->
-
-
 
     <!-- The tweet list -->
   <md-content layout="column" layout-align="center" layout-margin layout-padding ng-show="tweetCount">
@@ -61,7 +57,7 @@
           </div>
           <div class="md-tile-content" layout-margin layout-padding>
             <h3>{{tweet.text}}</h3>
-            <p ng-show="tweet.geo"> ({{tweet.geo[0]}}, {{tweet.geo[1]}})</p>
+            <p ng-show="tweet.coordinates"> ({{tweet.coordinates[0]}}, {{tweet.coordinates[1]}})</p>
           </div>
         </md-item-content>
       </md-card>

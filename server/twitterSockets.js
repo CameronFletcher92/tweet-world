@@ -16,7 +16,6 @@ module.exports = function(socketio) {
   function formatTweet(searchText, tweet) {
     var fTweet =  {
       searchText: searchText.toLowerCase(),
-      tweetId: tweet.id,
       userpic: tweet.user.profile_image_url,
       text: tweet.text,
       date: tweet.created_at
@@ -24,9 +23,10 @@ module.exports = function(socketio) {
 
     // set geo as null if there are no coordinates
     if (tweet.coordinates) {
-      fTweet.geoPoint = {latitude: tweet.coordinates.latitude, longitude: tweet.coordinates.longitude};
+      console.log(tweet.coordinates.coordinates);
+      fTweet.coordinates = tweet.coordinates.coordinates;
     } else {
-      fTweet.geoPoint = null;
+      fTweet.coordinates = null;
     }
 
     return fTweet;
@@ -73,11 +73,23 @@ module.exports = function(socketio) {
         // format the tweet to match our db
         var formattedTweet = formatTweet(searches[socket.id].searchText, tweet);
 
-        // cache the tweet
-        Tweet.create(formattedTweet);
+        // discard tweets with no coordinates
+        if (!formattedTweet.coordinates) {
+          return;
+        }
 
-        // emit message to clients
-        socket.emit('tweet', formattedTweet);
+        // cache the tweet
+        console.log("before");
+        console.log(formattedTweet);
+
+        Tweet.create(formattedTweet, function(err, savedTweet) {
+          if (err) {
+            console.log(err);
+          }
+          console.log("after");
+          console.log(savedTweet);
+          socket.emit('tweet', savedTweet);
+        });
       });
 
 
