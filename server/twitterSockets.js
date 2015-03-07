@@ -13,9 +13,9 @@ module.exports = function(socketio) {
     access_token_secret:  'KgDPamWRmLlF8mAemSqvsO2fzL3gCpoh24a87O4RGaAUH'
   });
 
-  function formatTweet(queryText, tweet) {
+  function formatTweet(searchText, tweet) {
     var fTweet =  {
-      query: queryText,
+      searchText: searchText.toLowerCase(),
       tweetId: tweet.id,
       userpic: tweet.user.profile_image_url,
       text: tweet.text,
@@ -35,7 +35,7 @@ module.exports = function(socketio) {
 
 // Sockets
   socketio.on('connection', function(socket) {
-    socket.on('stopTweetStream', function(g) {
+    socket.on('stopTweetStream', function(searchText) {
       if (searches[socket.id]) {
         console.log("stopping stream on socket: " + socket.id);
         searches[socket.id].stream.stop();
@@ -43,7 +43,10 @@ module.exports = function(socketio) {
       }
     });
 
-    socket.on('startTweetStream', function(q) {
+    socket.on('startTweetStream', function(searchText) {
+      // convert searchText to lowercase
+      searchText = searchText.toLowerCase();
+
       // stop the old stream if it exists
       if (searches[socket.id]) {
         console.log("stopping stream on socket: " + socket.id);
@@ -57,18 +60,18 @@ module.exports = function(socketio) {
       */
 
       // now set up the live stream
-      console.log("creating stream on socket: " + socket.id + ", query: " + q);
+      console.log("creating stream on socket: " + socket.id + ", searchText: " + searchText);
       var stream = T.stream('statuses/filter', {
-        track: q
+        track: searchText
       });
 
       // store the running stream for the user
-      searches[socket.id] = {stream: stream, query: q.toLowerCase()};
+      searches[socket.id] = {stream: stream, searchText: searchText};
 
       // set up the stream handlers
       stream.on('tweet', function(tweet) {
         // format the tweet to match our db
-        var formattedTweet = formatTweet(searches[socket.id].query, tweet);
+        var formattedTweet = formatTweet(searches[socket.id].searchText, tweet);
 
         // cache the tweet
         Tweet.create(formattedTweet);
@@ -81,6 +84,7 @@ module.exports = function(socketio) {
       stream.on('connected', function (response) {
         if (response.statusCode == 420) {
           console.log('socket: ' + socket.id + ' cannot connect (rate limited)');
+          socket.emit('limited');
         }
       });
 

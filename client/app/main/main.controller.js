@@ -26,6 +26,7 @@ angular.module('tweetWorldApp')
         return;
       }
 
+      $scope.searchText = $scope.searchText.toLowerCase();
       $scope.isSearching = true;
 
       // if the search hasn't changed, just restart the stream
@@ -36,14 +37,14 @@ angular.module('tweetWorldApp')
       }
 
       // otherwise, reset values, query cache and restart stream
-      else {
-        console.log('creating new search for: ' + $scope.searchText);
-        $scope.tweetCount = 0;
-        $scope.tweets = [];
-        $scope.currentSearch = $scope.searchText;
+      console.log('creating new search for: ' + $scope.searchText);
+      $scope.tweetCount = 0;
+      $scope.tweets = [];
+      $scope.currentSearch = $scope.searchText;
 
-        // tell the server to get the initial tweets
-        var tweets = Tweet.query(function () {
+      // tell the server to get the initial tweets
+      Tweet.query( { searchText: $scope.searchText, searchDate: $scope.searchDate }).$promise
+        .then(function(tweets) {
           // add to the counter
           $scope.tweetCount += tweets.length;
 
@@ -55,12 +56,11 @@ angular.module('tweetWorldApp')
           // when the initial tweets have been received, append them
           $scope.tweets = tweets;
 
-          console.log($scope.tweetCount + ' initial tweets loaded, setting up stream for: ' + $scope.currentSearch);
-
           // set up the live stream
+          console.log($scope.tweetCount + ' initial tweets loaded, requesting stream for: ' + $scope.currentSearch);
           socket.emit('startTweetStream', $scope.currentSearch);
-        });
-      }
+        }
+      );
     };
 
     // when a tweet is pushed, prepend it to the tweets
@@ -78,7 +78,11 @@ angular.module('tweetWorldApp')
       if ($scope.tweets.length > TWEET_LIMIT) {
         $scope.tweets.pop();
       }
+    });
 
+    socket.on('limited', function() {
+      $scope.stopTweets();
+      console.log("you just got limited fool");
     });
 
   });
