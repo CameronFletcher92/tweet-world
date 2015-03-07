@@ -37,7 +37,14 @@
     </div>
   </form>
 
-  <!-- The tweet list -->
+  <!-- The map -->
+  <md-content layout="column" layout-align="center center" layout-margin layout-padding>
+    <ui-gmap-google-map center='map.center' zoom='map.zoom'></ui-gmap-google-map>
+  </md-content>
+
+
+
+    <!-- The tweet list -->
   <md-content layout="column" layout-align="center" layout-margin layout-padding ng-show="tweetCount">
     <h3>Showing {{tweetCount}} results for '{{currentSearch}}':</h3>
 

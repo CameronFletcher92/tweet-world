@@ -3,6 +3,9 @@ var TWEET_LIMIT = 20;
 
 angular.module('tweetWorldApp')
   .controller('MainCtrl', function ($scope, $http, socket, Tweet) {
+    /*
+    TWEET MINING
+     */
     // scope variables
     $scope.tweets = [];
     $scope.searchText = '';
@@ -84,5 +87,13 @@ angular.module('tweetWorldApp')
       $scope.stopTweets();
       console.log("you just got limited fool");
     });
+
+    /*
+    MAP
+     */
+    $scope.map = {
+      center: { latitude: 0, longitude: 0 },
+      zoom: 1
+    };
 
   });
