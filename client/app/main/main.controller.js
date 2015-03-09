@@ -8,6 +8,7 @@ angular.module('tweetWorldApp')
      */
     // scope variables
     $scope.tweets = [];
+    $scope.heatPoints = [];
     $scope.searchText = '';
     $scope.searchDate = new Date();
     $scope.currentSearch = '';
@@ -43,6 +44,7 @@ angular.module('tweetWorldApp')
       console.log('creating new search for: ' + $scope.searchText);
       $scope.tweetCount = 0;
       $scope.tweets = [];
+      $scope.heatPoints.length = 0;
       $scope.currentSearch = $scope.searchText;
 
       // tell the server to get the initial tweets
@@ -59,12 +61,23 @@ angular.module('tweetWorldApp')
           // when the initial tweets have been received, append them
           $scope.tweets = tweets;
 
+          // add the initial tweets to the heatmap
+          for (var i = 0; i < tweets.length; i++) {
+            if (tweets[i].coordinates)
+            $scope.heatPoints.push(generateHeatPoint(tweets[i]));
+          }
+
           // set up the live stream
           console.log($scope.tweetCount + ' initial tweets loaded, requesting stream for: ' + $scope.currentSearch);
           socket.emit('startTweetStream', $scope.currentSearch);
         }
       );
     };
+
+    function generateHeatPoint(tweet) {
+      var p = [tweet.coordinates[1], tweet.coordinates[0], 0.5];
+      return p;
+    }
 
     // when a tweet is pushed, prepend it to the tweets
     socket.on('tweet', function(tweet) {
@@ -81,7 +94,13 @@ angular.module('tweetWorldApp')
       if ($scope.tweets.length > TWEET_LIMIT) {
         $scope.tweets.pop();
       }
+
+      // add to the heat points
+      if (tweet.coordinates) {
+        $scope.heatPoints.push(generateHeatPoint(tweet));
+      }
     });
+
 
     socket.on('limited', function() {
       $scope.stopTweets();
@@ -92,22 +111,11 @@ angular.module('tweetWorldApp')
     /*
     MAP
      */
-    /*
     $scope.map = {
-      center: { latitude: 0, longitude: 0 },
-      zoom: 1
-    };
-    */
-
-    var dataPoints = [
-      [44.651144316,-63.586260171, 0.5],
-      [44.75, -63.5, 0.8] ];
-
-    angular.extend($scope, {
       center: {
-        lat: 44.8091,
-        lng: -63.3636,
-        zoom: 9
+        lat: 0,
+        lng: 0,
+        zoom: 2
       },
       layers: {
         baselayers: {
@@ -121,11 +129,12 @@ angular.module('tweetWorldApp')
           heatmap: {
             name: 'Heat Map',
             type: 'heatmap',
-            data: dataPoints,
+            data: $scope.heatPoints,
+            size: 500, // in km
+            alphaRange: 0.1,
             visible: true
           }
         }
       }
-    });
-
+    };
   });
