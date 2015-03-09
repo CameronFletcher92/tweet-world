@@ -23,7 +23,7 @@ module.exports = function(socketio) {
 
     // set geo as null if there are no coordinates
     if (tweet.coordinates) {
-      console.log(tweet.coordinates.coordinates);
+      //console.log(tweet.coordinates.coordinates);
       fTweet.coordinates = tweet.coordinates.coordinates;
     } else {
       fTweet.coordinates = null;

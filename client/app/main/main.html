@@ -39,10 +39,9 @@
 
   <!-- The map -->
   <md-content layout="column" layout-align="center center" layout-margin layout-padding>
-    <ui-gmap-google-map center='map.center' zoom='map.zoom'>
-      <ui-gmap-markers models="tweets" idKey = "'_id'" coords="'coordinates'">
-      </ui-gmap-markers>
-    </ui-gmap-google-map>
+    <leaflet center="center" layers="layers" height="400px" width="600px"></leaflet>
+
+
   </md-content>
 
     <!-- The tweet list -->

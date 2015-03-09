@@ -8,7 +8,7 @@ angular.module('tweetWorldApp', [
   'ui.router',
   'ui.bootstrap',
   'ngMaterial',
-  'uiGmapgoogle-maps'
+  'leaflet-directive'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
     $urlRouterProvider
