@@ -2,7 +2,7 @@
 var TWEET_FEED_LIMIT = 10;
 
 angular.module('tweetWorldApp')
-  .controller('MainCtrl', function ($scope, $http, socket, Tweet) {
+  .controller('MainCtrl', function ($scope, $http, socket, Tweet, $mdToast) {
     /*
     TWEET MINING
      */
@@ -108,8 +108,13 @@ angular.module('tweetWorldApp')
 
     socket.on('limited', function() {
       $scope.stopTweets();
-      $scope.searchTweets();
-      console.log("you just got limited fool");
+
+      $mdToast.show(
+        $mdToast.simple()
+          .content('Rate Limited by Twitter (chill out for a bit)!')
+          .position('top right')
+          .hideDelay(3000)
+      );
     });
 
     /*
