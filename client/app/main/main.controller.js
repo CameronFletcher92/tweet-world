@@ -1,5 +1,5 @@
 'use strict';
-var TWEET_LIMIT = 10;
+var TWEET_FEED_LIMIT = 10;
 
 angular.module('tweetWorldApp')
   .controller('MainCtrl', function ($scope, $http, socket, Tweet) {
@@ -7,7 +7,7 @@ angular.module('tweetWorldApp')
     TWEET MINING
      */
     // scope variables
-    $scope.tweets = [];
+    $scope.tweetFeed = [];
     $scope.heatPoints = [];
     $scope.searchText = '';
 
@@ -46,7 +46,7 @@ angular.module('tweetWorldApp')
       // otherwise, reset values, query cache and restart stream
       console.log('creating new search for: ' + $scope.searchText);
       $scope.tweetCount = 0;
-      $scope.tweets = [];
+      $scope.tweetFeed.length = 0;
       $scope.heatPoints.length = 0;
       $scope.currentSearch = $scope.searchText;
 
@@ -64,13 +64,12 @@ angular.module('tweetWorldApp')
           }
 
           // slice if there are too many (but keep the count)
-          if (tweets.length > TWEET_LIMIT) {
-            tweets = tweets.slice(0, TWEET_LIMIT);
+          if (tweets.length > TWEET_FEED_LIMIT) {
+            tweets = tweets.slice(0, TWEET_FEED_LIMIT);
           }
 
           // add to the tweet feed
-          $scope.tweets = tweets;
-
+          $scope.tweetFeed = tweets;
 
           // set up the live stream
           console.log($scope.tweetCount + ' initial tweets loaded, requesting stream for: ' + $scope.currentSearch);
@@ -99,9 +98,9 @@ angular.module('tweetWorldApp')
       }
 
       // prepend the new tweet, pop the end if the array is over size
-      $scope.tweets.unshift(tweet);
-      if ($scope.tweets.length > TWEET_LIMIT) {
-        $scope.tweets.pop();
+      $scope.tweetFeed.unshift(tweet);
+      if ($scope.tweetFeed.length > TWEET_FEED_LIMIT) {
+        $scope.tweetFeed.pop();
       }
 
     });

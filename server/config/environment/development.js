@@ -9,5 +9,5 @@ module.exports = {
   },
 
   // reset the db on server quit
-  seedDB: true
+  seedDB: false
 };

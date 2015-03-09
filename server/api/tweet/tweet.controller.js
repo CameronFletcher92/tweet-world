@@ -8,8 +8,6 @@ exports.index = function(req, res) {
   var searchDate = req.query.searchDate;
   var searchText = req.query.searchText;
 
-  console.log("search date = " + searchDate);
-
   // get the tweets with the keyword
   var tweets = Tweet.find()
     .where('searchText').equals(searchText);
