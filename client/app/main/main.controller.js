@@ -75,8 +75,7 @@ angular.module('tweetWorldApp')
     };
 
     function generateHeatPoint(tweet) {
-      var p = [tweet.coordinates[1], tweet.coordinates[0], 0.5];
-      return p;
+      return [tweet.coordinates[1], tweet.coordinates[0], 0.5];
     }
 
     // when a tweet is pushed, prepend it to the tweets
@@ -121,7 +120,11 @@ angular.module('tweetWorldApp')
         baselayers: {
           osm: {
             name: 'OpenStreetMap',
-            url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            //url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', // beige and blue
+            //url: 'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', //black and white
+            //url: 'http://{s}.tile.thunderforest.com/transport-dark/{z}/{x}/{y}.png', // brown and blue
+            //url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}', // real
+            url: 'http://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
             type: 'xyz'
           }
         },
