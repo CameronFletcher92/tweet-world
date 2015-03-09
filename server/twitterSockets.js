@@ -73,11 +73,6 @@ module.exports = function(socketio) {
         // format the tweet to match our db
         var formattedTweet = formatTweet(searches[socket.id].searchText, tweet);
 
-        // discard tweets with no coordinates
-        if (!formattedTweet.coordinates) {
-          return;
-        }
-
         // cache the tweet then emit it
         Tweet.create(formattedTweet, function(err, savedTweet) {
           socket.emit('tweet', savedTweet);

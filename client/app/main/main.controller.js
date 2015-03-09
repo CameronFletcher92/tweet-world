@@ -1,5 +1,5 @@
 'use strict';
-var TWEET_LIMIT = 1000;
+var TWEET_LIMIT = 10;
 
 angular.module('tweetWorldApp')
   .controller('MainCtrl', function ($scope, $http, socket, Tweet) {
@@ -10,7 +10,10 @@ angular.module('tweetWorldApp')
     $scope.tweets = [];
     $scope.heatPoints = [];
     $scope.searchText = '';
-    $scope.searchDate = new Date();
+
+    var now = new Date();
+    $scope.searchDate = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),  0, 0, 0);
+
     $scope.currentSearch = '';
     $scope.isSearching = false;
     $scope.tweetCount = 0;
@@ -53,19 +56,21 @@ angular.module('tweetWorldApp')
           // add to the counter
           $scope.tweetCount += tweets.length;
 
+          // add the initial tweets to the heatmap
+          for (var i = 0; i < tweets.length; i++) {
+            if (tweets[i].coordinates) {
+              $scope.heatPoints.push(generateHeatPoint(tweets[i]));
+            }
+          }
+
           // slice if there are too many (but keep the count)
           if (tweets.length > TWEET_LIMIT) {
             tweets = tweets.slice(0, TWEET_LIMIT);
           }
 
-          // when the initial tweets have been received, append them
+          // add to the tweet feed
           $scope.tweets = tweets;
 
-          // add the initial tweets to the heatmap
-          for (var i = 0; i < tweets.length; i++) {
-            if (tweets[i].coordinates)
-            $scope.heatPoints.push(generateHeatPoint(tweets[i]));
-          }
 
           // set up the live stream
           console.log($scope.tweetCount + ' initial tweets loaded, requesting stream for: ' + $scope.currentSearch);
@@ -88,16 +93,17 @@ angular.module('tweetWorldApp')
       // increment the counter
       $scope.tweetCount++;
 
+      // add to the heat points
+      if (tweet.coordinates) {
+        $scope.heatPoints.push(generateHeatPoint(tweet));
+      }
+
       // prepend the new tweet, pop the end if the array is over size
       $scope.tweets.unshift(tweet);
       if ($scope.tweets.length > TWEET_LIMIT) {
         $scope.tweets.pop();
       }
 
-      // add to the heat points
-      if (tweet.coordinates) {
-        $scope.heatPoints.push(generateHeatPoint(tweet));
-      }
     });
 
 
@@ -121,10 +127,9 @@ angular.module('tweetWorldApp')
           osm: {
             name: 'OpenStreetMap',
             //url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', // beige and blue
-            //url: 'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', //black and white
             //url: 'http://{s}.tile.thunderforest.com/transport-dark/{z}/{x}/{y}.png', // brown and blue
             //url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}', // real
-            url: 'http://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+            url: 'http://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', // black and white
             type: 'xyz'
           }
         },
@@ -133,7 +138,7 @@ angular.module('tweetWorldApp')
             name: 'Heat Map',
             type: 'heatmap',
             data: $scope.heatPoints,
-            size: 500, // in km
+            size: 400, // multiplied in webgl-heatmap-leaflet
             alphaRange: 0.1,
             visible: true
           }
