@@ -7,11 +7,11 @@
 
 L.TileLayer.WebGLHeatMap = L.Class.extend({
   options: {
-    size: 30000, // in meters
-    multiplier: 15,
+    size: 5000,
+    multiplier: 13, //workaround, fixed multiplier of circle size
     opacity: 1,
     gradientTexture: false,
-    alphaRange: 1
+    alphaRange: 0.2
   },
 
   initialize: function (options) {

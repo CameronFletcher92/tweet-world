@@ -9,7 +9,7 @@ angular.module('tweetWorldApp')
     // scope variables
     $scope.tweetFeed = [];
     $scope.heatPoints = [];
-    $scope.searchText = '';
+    $scope.searchText = 'happy';
 
     var now = new Date();
     $scope.searchDate = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),  0, 0, 0);
@@ -98,7 +98,7 @@ angular.module('tweetWorldApp')
 
     // flip the order of the co-ords (map doesn't use geojson)
     function generateHeatPoint(tweet) {
-      return [tweet.coordinates[1], tweet.coordinates[0], 0.4];
+      return [tweet.coordinates[1], tweet.coordinates[0], 0.2];
     }
 
 
@@ -164,8 +164,6 @@ angular.module('tweetWorldApp')
             name: 'Heat Map',
             type: 'heatmap',
             data: $scope.heatPoints,
-            size: 400, // multiplied in webgl-heatmap-leaflet
-            alphaRange: 0.1,
             visible: true
           }
         }
