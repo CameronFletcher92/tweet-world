@@ -54,11 +54,6 @@ module.exports = function(socketio) {
         delete searches[socket.id];
       }
 
-      /* not working at the moment
-      var aus = [ '-37.5050', '140.999', '-28.157', '153.638824'];
-      var sanFrancisco = [ '-122.75', '36.8', '-121.75', '37.8' ];
-      */
-
       // now set up the live stream
       console.log("creating stream on socket: " + socket.id + ", searchText: " + searchText);
       var stream = T.stream('statuses/filter', {
@@ -77,7 +72,7 @@ module.exports = function(socketio) {
         socket.emit('tweet', formattedTweet);
 
         // cache the tweet
-        //Tweet.create(formattedTweet);
+        Tweet.create(formattedTweet);
       });
 
 

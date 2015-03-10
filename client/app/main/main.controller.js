@@ -50,12 +50,13 @@ angular.module('tweetWorldApp')
       $scope.heatPoints.length = 0;
       $scope.currentSearch = $scope.searchText;
 
-      // tell the server to get the initial tweets
-      /*
+      // get the initial tweets
       Tweet.query( { searchText: $scope.searchText, searchDate: $scope.searchDate }).$promise
         .then(function(tweets) {
           // add to the counter
           $scope.tweetCount += tweets.length;
+
+          console.log($scope.tweetCount + ' initial tweets loaded');
 
           // add the initial tweets to the heatmap
           for (var i = 0; i < tweets.length; i++) {
@@ -69,18 +70,15 @@ angular.module('tweetWorldApp')
             tweets = tweets.slice(0, TWEET_FEED_LIMIT);
           }
 
-          // add to the tweet feed
-          $scope.tweetFeed = tweets;
-
-          // set up the live stream
-          console.log($scope.tweetCount + ' initial tweets loaded, requesting stream for: ' + $scope.currentSearch);
-          socket.emit('startTweetStream', $scope.currentSearch);
+          // update the feed
+          for (var j = 0; j < tweets.length; j++) {
+            $scope.tweetFeed.unshift(tweets[j]);
+          }
         }
       );
-      */
 
       // set up the live stream
-      console.log($scope.tweetCount + ' initial tweets loaded, requesting stream for: ' + $scope.currentSearch);
+      console.log('requesting stream for: ' + $scope.currentSearch);
       socket.emit('startTweetStream', $scope.currentSearch);
     };
 
