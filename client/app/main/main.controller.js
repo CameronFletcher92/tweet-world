@@ -45,14 +45,24 @@ angular.module('tweetWorldApp')
 
       // otherwise, reset values, query cache and restart stream
       console.log('creating new search for: ' + $scope.searchText);
+
+      // set the current search text
+      $scope.currentSearch = $scope.searchText;
+
+      // reset tweet feed/count
       $scope.tweetCount = 0;
       $scope.tweetFeed.length = 0;
+
+      // work-around to force heatmap refresh
       $scope.heatPoints.length = 0;
-      $scope.currentSearch = $scope.searchText;
+      $scope.heatPoints.push([0,0,0]);
 
       // get the initial tweets
       Tweet.query( { searchText: $scope.searchText, searchDate: $scope.searchDate }).$promise
         .then(function(tweets) {
+          // complete the heatmap reset
+          $scope.heatPoints.length = 0;
+
           // add to the counter
           $scope.tweetCount += tweets.length;
 
