@@ -71,8 +71,10 @@ module.exports = function(socketio) {
         // emit the tweet
         socket.emit('tweet', formattedTweet);
 
-        // cache the tweet
-        Tweet.create(formattedTweet);
+        // cache the tweet if it has location data
+        if (formattedTweet.coordinates) {
+          Tweet.create(formattedTweet);
+        }
       });
 
 

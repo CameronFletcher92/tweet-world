@@ -65,10 +65,13 @@ angular.module('tweetWorldApp')
             }
           }
 
-          // slice if there are too many (but keep the count)
-          if (tweets.length > TWEET_FEED_LIMIT) {
-            tweets = tweets.slice(0, TWEET_FEED_LIMIT);
+          // slice if there are too many for the feed
+          var freeSpace = TWEET_FEED_LIMIT - $scope.tweetFeed.length;
+          if (tweets.length > freeSpace) {
+            tweets = tweets.slice(0, freeSpace);
           }
+
+          console.log("attaching " + tweets.length + " initial tweets to feed");
 
           // update the feed
           for (var j = 0; j < tweets.length; j++) {
