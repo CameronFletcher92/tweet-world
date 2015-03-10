@@ -98,7 +98,7 @@ angular.module('tweetWorldApp')
 
     // flip the order of the co-ords (map doesn't use geojson)
     function generateHeatPoint(tweet) {
-      return [tweet.coordinates[1], tweet.coordinates[0], 0.5];
+      return [tweet.coordinates[1], tweet.coordinates[0], 0.4];
     }
 
 
