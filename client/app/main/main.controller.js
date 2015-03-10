@@ -51,6 +51,7 @@ angular.module('tweetWorldApp')
       $scope.currentSearch = $scope.searchText;
 
       // tell the server to get the initial tweets
+      /*
       Tweet.query( { searchText: $scope.searchText, searchDate: $scope.searchDate }).$promise
         .then(function(tweets) {
           // add to the counter
@@ -76,6 +77,10 @@ angular.module('tweetWorldApp')
           socket.emit('startTweetStream', $scope.currentSearch);
         }
       );
+      */
+
+      console.log($scope.tweetCount + ' initial tweets loaded, requesting stream for: ' + $scope.currentSearch);
+      socket.emit('startTweetStream', $scope.currentSearch);
     };
 
     function generateHeatPoint(tweet) {

@@ -74,9 +74,13 @@ module.exports = function(socketio) {
         var formattedTweet = formatTweet(searches[socket.id].searchText, tweet);
 
         // cache the tweet then emit it
+        /*
         Tweet.create(formattedTweet, function(err, savedTweet) {
           socket.emit('tweet', savedTweet);
         });
+        */
+        console.log('emmitting + ', formattedTweet)
+        socket.emit('tweet', formattedTweet);
       });
 
 
