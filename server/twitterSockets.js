@@ -73,19 +73,16 @@ module.exports = function(socketio) {
         // format the tweet to match our db
         var formattedTweet = formatTweet(searches[socket.id].searchText, tweet);
 
-        // cache the tweet then emit it
-        /*
-        Tweet.create(formattedTweet, function(err, savedTweet) {
-          socket.emit('tweet', savedTweet);
-        });
-        */
-        console.log('emmitting + ', formattedTweet)
+        // emit the tweet
         socket.emit('tweet', formattedTweet);
+
+        // cache the tweet
+        //Tweet.create(formattedTweet);
       });
 
 
       stream.on('connected', function (response) {
-        if (response.statusCode == 420) {
+        if (response.statusCode === 420) {
           console.log('socket: ' + socket.id + ' cannot connect (rate limited)');
           socket.emit('limited');
         }

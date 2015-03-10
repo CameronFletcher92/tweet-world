@@ -19,7 +19,7 @@ angular.module('tweetWorldApp')
     $scope.tweetCount = 0;
 
     $scope.stopTweets = function() {
-      if ($scope.currentSearch == '') {
+      if ($scope.currentSearch === '') {
         return;
       }
 
@@ -29,7 +29,7 @@ angular.module('tweetWorldApp')
     };
 
     $scope.searchTweets = function() {
-      if ($scope.searchText == '') {
+      if ($scope.searchText === '') {
         return;
       }
 
@@ -37,7 +37,7 @@ angular.module('tweetWorldApp')
       $scope.isSearching = true;
 
       // if the search hasn't changed, just restart the stream
-      if ($scope.currentSearch == $scope.searchText) {
+      if ($scope.currentSearch === $scope.searchText) {
         console.log('resuming search for: ' + $scope.searchText);
         socket.emit('startTweetStream', $scope.currentSearch);
         return;
@@ -79,6 +79,7 @@ angular.module('tweetWorldApp')
       );
       */
 
+      // set up the live stream
       console.log($scope.tweetCount + ' initial tweets loaded, requesting stream for: ' + $scope.currentSearch);
       socket.emit('startTweetStream', $scope.currentSearch);
     };
