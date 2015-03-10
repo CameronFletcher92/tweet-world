@@ -2,7 +2,7 @@
 var TWEET_FEED_LIMIT = 10;
 
 angular.module('tweetWorldApp')
-  .controller('MainCtrl', function ($scope, $http, socket, Tweet, $mdToast) {
+  .controller('MainCtrl', function ($scope, $http, socket, Tweet, $mdDialog) {
     /*
     TWEET MINING
      */
@@ -95,9 +95,12 @@ angular.module('tweetWorldApp')
       socket.emit('startTweetStream', $scope.currentSearch);
     };
 
+
+    // flip the order of the co-ords (map doesn't use geojson)
     function generateHeatPoint(tweet) {
       return [tweet.coordinates[1], tweet.coordinates[0], 0.5];
     }
+
 
     // when a tweet is pushed, prepend it to the tweets
     socket.on('tweet', function(tweet) {
@@ -123,14 +126,16 @@ angular.module('tweetWorldApp')
     });
 
 
+    // rate limited by twitter, show the alert
     socket.on('limited', function() {
       $scope.stopTweets();
 
-      $mdToast.show(
-        $mdToast.simple()
-          .content('Rate Limited by Twitter (chill out for a bit)!')
-          .position('top right')
-          .hideDelay(3000)
+      $mdDialog.show(
+        $mdDialog.alert()
+          .title('Rate limited by Twitter')
+          .content('Changing the keyword too often results in a rate-limit, just chill out for a bit')
+          .ariaLabel('Password notification')
+          .ok('Got it!')
       );
     });
 
