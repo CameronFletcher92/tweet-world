@@ -21,11 +21,18 @@ module.exports = function(socketio) {
       date: tweet.created_at
     };
 
-    // set geo as null if there are no coordinates
+    // get the tweet co-ordinates
     if (tweet.coordinates) {
-      //console.log(tweet.coordinates.coordinates);
+      // directly
       fTweet.coordinates = tweet.coordinates.coordinates;
+    } else if (tweet.place) {
+      // or from place's bounding box (center)
+      var box = tweet.place.bounding_box.coordinates[0];
+      var lng = (box[0][0] + box[1][0]) / 2;
+      var lat = (box[0][1] + box[3][1]) / 2;
+      fTweet.coordinates = [lng, lat];
     } else {
+      // or null it
       fTweet.coordinates = null;
     }
 
