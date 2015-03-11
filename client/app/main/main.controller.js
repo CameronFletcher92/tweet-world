@@ -143,6 +143,10 @@ angular.module('tweetWorldApp')
     MAP
      */
     $scope.map = {
+      defaults: {
+        maxZoom: 8,
+        minZoom: 2
+      },
       center: {
         lat: 0,
         lng: 0,
