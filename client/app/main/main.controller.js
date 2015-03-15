@@ -1,29 +1,37 @@
 'use strict';
 var TWEET_FEED_LIMIT = 10;
+var RATE_INTERVAL = 500;
 
 angular.module('tweetWorldApp')
   .controller('MainCtrl', function ($scope, $http, socket, Tweet, $mdDialog, $interval) {
-    /*
-    TWEET MINING
-     */
-    // scope variables
+
+    // PRIVATE VARIABLES
+    var now = new Date();
+
+    // SCOPE VARIABLES
+    // data collections
     $scope.tweetFeed = [];
     $scope.heatPoints = [];
     $scope.chartPoints = [
       {date: new Date(), rate: 0} // dummy so chart initializes
     ];
-    $scope.searchText = 'happy';
 
-    var now = new Date();
+    // input variables
+    $scope.searchText = 'happy';
     $scope.searchDate = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),  0, 0, 0);
 
+    // state variables
     $scope.currentSearch = '';
     $scope.isSearching = false;
-    $scope.tweetCount = 0;
     $scope.liveTweetCount = 0;
-
     $scope.searchStartTime = null;
 
+    // statistics
+    $scope.tweetRate = 0;
+    $scope.tweetCount = 0;
+
+
+    // BUTTON HANDLERS
     $scope.stopTweets = function() {
       if ($scope.currentSearch === '') {
         return;
@@ -33,7 +41,9 @@ angular.module('tweetWorldApp')
       socket.emit('stopTweetStream', $scope.currentSearch);
       $scope.isSearching = false;
       $scope.searchStartTime = null;
+      $scope.tweetRate = 0;
     };
+
 
     $scope.searchTweets = function() {
       if ($scope.searchText === '') {
@@ -106,12 +116,7 @@ angular.module('tweetWorldApp')
     };
 
 
-    // flip the order of the co-ords (map doesn't use geojson)
-    function generateHeatPoint(tweet) {
-      return [tweet.coordinates[1], tweet.coordinates[0], 0.2];
-    }
-
-
+    // SOCKET HANDLERS
     // when a tweet is pushed, prepend it to the tweets
     socket.on('tweet', function(tweet) {
       // discard tweets if search was cancelled
@@ -136,7 +141,6 @@ angular.module('tweetWorldApp')
 
     });
 
-
     // rate limited by twitter, show the alert
     socket.on('limited', function() {
       $scope.stopTweets();
@@ -150,9 +154,27 @@ angular.module('tweetWorldApp')
       );
     });
 
-    /*
-    MAP
-     */
+    // update the rates collection / current rate metric
+    $interval(function() {
+      // don't do anything if not searching
+      if (!$scope.isSearching) {
+        return;
+      }
+
+      var now = new Date();
+      var secDiff = (now - $scope.searchStartTime) / 1000;
+      var ratePoint = {
+        date: now,
+        rate: roundDecimal($scope.liveTweetCount / secDiff)
+      };
+
+      $scope.chartPoints.push(ratePoint);
+      $scope.tweetRate = ratePoint.rate;
+
+    }, RATE_INTERVAL);
+
+
+    // MAP OPTIONS
     $scope.map = {
       defaults: {
         maxZoom: 8,
@@ -185,27 +207,7 @@ angular.module('tweetWorldApp')
       }
     };
 
-
-    /*
-    CHART
-     */
-    $interval(function() {
-      // don't do anything of not searching
-      if (!$scope.isSearching) {
-        return;
-      }
-
-      var now = new Date();
-      var secDiff = (now - $scope.searchStartTime) / 1000;
-      var ratePoint = {
-        date: now,
-        rate: ($scope.liveTweetCount / secDiff)
-      };
-
-      $scope.chartPoints.push(ratePoint);
-
-    }, 1000);
-
+    // RATE CHART OPTIONS
     $scope.chartOptions = {
       axes: {
         x: {type: "date", key: "date"},
@@ -226,7 +228,7 @@ angular.module('tweetWorldApp')
       tooltip: {
         mode: "scrubber",
         formatter: function (x, y, series) {
-          return moment(x).fromNow() + ' : ' + Math.round(y * 100) / 100;
+          return moment(x).fromNow() + ' : ' + y;
         }
       },
       stacks: [],
@@ -237,4 +239,14 @@ angular.module('tweetWorldApp')
       columnsHGap: 5
     };
 
+
+    // PRIVATE FUNCTIONS
+    // flip the order of the co-ords (map doesn't use geojson)
+    function generateHeatPoint(tweet) {
+      return [tweet.coordinates[1], tweet.coordinates[0], 0.2];
+    }
+
+    function roundDecimal(decimal) {
+      return Math.round(decimal * 100) / 100;
+    }
   });
