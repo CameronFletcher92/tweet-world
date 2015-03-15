@@ -22,7 +22,7 @@ angular.module('tweetWorldApp')
 
     // input variables
     $scope.searchText = 'happy';
-    $scope.searchDate = new Date(_now.getUTCFullYear(), _now.getUTCMonth(), _now.getUTCDate(),  0, 0, 0);
+    $scope.searchDate = new Date(_now.getUTCFullYear(), _now.getUTCMonth(), _now.getUTCDate(), 0, 0, 0);
 
     // state variables
     $scope.currentSearch = '';
@@ -34,7 +34,7 @@ angular.module('tweetWorldApp')
 
 
     // BUTTON HANDLERS
-    $scope.stopTweets = function() {
+    $scope.stopTweets = function () {
       if ($scope.currentSearch === '') {
         return;
       }
@@ -47,7 +47,7 @@ angular.module('tweetWorldApp')
     };
 
 
-    $scope.searchTweets = function() {
+    $scope.searchTweets = function () {
       if ($scope.searchText === '') {
         return;
       }
@@ -85,11 +85,11 @@ angular.module('tweetWorldApp')
 
       // work-around to force heatmap refresh
       $scope.heatPoints.length = 0;
-      $scope.heatPoints.push([0,0,0]);
+      $scope.heatPoints.push([0, 0, 0]);
 
       // get the initial tweets
-      Tweet.query( { searchText: $scope.searchText, searchDate: $scope.searchDate }).$promise
-        .then(function(tweets) {
+      Tweet.query({searchText: $scope.searchText, searchDate: $scope.searchDate}).$promise
+        .then(function (tweets) {
           // complete the heatmap reset
           $scope.heatPoints.length = 0;
 
@@ -128,7 +128,7 @@ angular.module('tweetWorldApp')
 
     // SOCKET HANDLERS
     // when a tweet is pushed, prepend it to the tweets
-    socket.on('tweet', function(tweet) {
+    socket.on('tweet', function (tweet) {
       // discard tweets if search was cancelled
       if (!$scope.isSearching) {
         return;
@@ -152,7 +152,7 @@ angular.module('tweetWorldApp')
     });
 
     // rate limited by twitter, show the alert
-    socket.on('limited', function() {
+    socket.on('limited', function () {
       $scope.stopTweets();
 
       $mdDialog.show(
@@ -166,7 +166,7 @@ angular.module('tweetWorldApp')
 
 
     // update the rates collection / current rate metric
-    $interval(function() {
+    $interval(function () {
       // don't do anything if not searching
       if (!$scope.isSearching) {
         return;
@@ -225,6 +225,7 @@ angular.module('tweetWorldApp')
     };
 
 
+    // CHART OPTIONS
     $scope.chartOptions = {
       axes: {
         x: {type: "date", key: "date"},
