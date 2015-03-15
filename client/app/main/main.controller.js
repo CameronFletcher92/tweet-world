@@ -6,7 +6,10 @@ angular.module('tweetWorldApp')
   .controller('MainCtrl', function ($scope, $http, socket, Tweet, $mdDialog, $interval) {
 
     // PRIVATE VARIABLES
-    var now = new Date();
+    var _now = new Date();
+    var _liveTweetCount = 0;
+    var _searchStartTime = null;
+    var _lastSearchDate = null;
 
     // SCOPE VARIABLES
     // data collections
@@ -18,13 +21,11 @@ angular.module('tweetWorldApp')
 
     // input variables
     $scope.searchText = 'happy';
-    $scope.searchDate = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),  0, 0, 0);
+    $scope.searchDate = new Date(_now.getUTCFullYear(), _now.getUTCMonth(), _now.getUTCDate(),  0, 0, 0);
 
     // state variables
     $scope.currentSearch = '';
     $scope.isSearching = false;
-    $scope.liveTweetCount = 0;
-    $scope.searchStartTime = null;
 
     // statistics
     $scope.tweetRate = 0;
@@ -39,8 +40,9 @@ angular.module('tweetWorldApp')
 
       console.log('stopping stream');
       socket.emit('stopTweetStream', $scope.currentSearch);
+
+      _searchStartTime = null;
       $scope.isSearching = false;
-      $scope.searchStartTime = null;
       $scope.tweetRate = 0;
     };
 
@@ -50,28 +52,36 @@ angular.module('tweetWorldApp')
         return;
       }
 
+      // convert search text to lowercase and mark as searching
       $scope.searchText = $scope.searchText.toLowerCase();
       $scope.isSearching = true;
-      $scope.searchStartTime = new Date();
+
+      // always reset time series
+      _searchStartTime = new Date();
+      _liveTweetCount = 0;
+      $scope.chartPoints.length = 0;
+
 
       // if the search hasn't changed, just restart the stream
-      if ($scope.currentSearch === $scope.searchText) {
+      if ($scope.currentSearch === $scope.searchText && _lastSearchDate === $scope.searchDate) {
         console.log('resuming search for: ' + $scope.searchText);
         socket.emit('startTweetStream', $scope.currentSearch);
         return;
       }
 
+
       // otherwise, reset values, query cache and restart stream
       console.log('creating new search for: ' + $scope.searchText);
+
+      // update the last search time
+      _lastSearchDate = $scope.searchDate;
 
       // set the current search text
       $scope.currentSearch = $scope.searchText;
 
       // reset tweet feed/count
       $scope.tweetCount = 0;
-      $scope.liveTweetCount = 0;
       $scope.tweetFeed.length = 0;
-      $scope.chartPoints.length = 0;
 
       // work-around to force heatmap refresh
       $scope.heatPoints.length = 0;
@@ -126,7 +136,7 @@ angular.module('tweetWorldApp')
 
       // increment the counters
       $scope.tweetCount++;
-      $scope.liveTweetCount++;
+      _liveTweetCount++;
 
       // add to the heat points
       if (tweet.coordinates) {
@@ -161,11 +171,11 @@ angular.module('tweetWorldApp')
         return;
       }
 
-      var now = new Date();
-      var secDiff = (now - $scope.searchStartTime) / 1000;
+      var current = new Date();
+      var secDiff = (current - _searchStartTime) / 1000;
       var ratePoint = {
-        date: now,
-        rate: roundDecimal($scope.liveTweetCount / secDiff)
+        date: current,
+        rate: roundDecimal(_liveTweetCount / secDiff)
       };
 
       $scope.chartPoints.push(ratePoint);
