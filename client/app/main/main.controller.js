@@ -9,7 +9,9 @@ angular.module('tweetWorldApp')
     // scope variables
     $scope.tweetFeed = [];
     $scope.heatPoints = [];
-    $scope.ratePoints = [];
+    $scope.chartPoints = [
+      {date: new Date(), rate: 0} // dummy so chart initializes
+    ];
     $scope.searchText = 'happy';
 
     var now = new Date();
@@ -59,6 +61,7 @@ angular.module('tweetWorldApp')
       $scope.tweetCount = 0;
       $scope.liveTweetCount = 0;
       $scope.tweetFeed.length = 0;
+      $scope.chartPoints.length = 0;
 
       // work-around to force heatmap refresh
       $scope.heatPoints.length = 0;
@@ -194,15 +197,36 @@ angular.module('tweetWorldApp')
 
       var now = new Date();
       var secDiff = (now - $scope.searchStartTime) / 1000;
-      console.log(secDiff);
       var ratePoint = {
         date: now,
         rate: ($scope.liveTweetCount / secDiff)
       };
 
-      $scope.ratePoints.push(ratePoint);
-      console.log("RATE POINTS:");
-      console.log($scope.ratePoints);
+      $scope.chartPoints.push(ratePoint);
 
-    }, 5000)
+    }, 1000);
+
+
+    $scope.chartSchema = {
+      date: {
+        type: 'datetime',
+        format: '%Y-%m-%d_%H:%M:%S',
+        name: 'Date'
+      },
+      rate: {
+        type: 'numeric',
+        name: 'Tweets per second'
+      }
+    };
+
+    $scope.chartOptions = {
+      rows: [{
+        key: 'rate',
+        type: 'line'
+      }],
+      xAxis: {
+        key: 'date',
+        displayFormat: '%Y-%m-%d %H:%M:%S'
+      }
+    };
   });

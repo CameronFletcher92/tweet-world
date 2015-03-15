@@ -100,6 +100,24 @@
     </md-card>
   </div>
 
+  <!-- Chart -->
+  <div layout="row">
+    <md-card flex>
+      <md-toolbar class="md-primary">
+        <div class="md-toolbar-tools">
+          <span class="md-flex">Time Series</span>
+        </div>
+      </md-toolbar>
+
+      <md-content layout="column" layout-align="center center" layout-padding>
+        <angularchart dataset="chartPoints" schema="chartSchema" options="chartOptions">
+        </angularchart>
+
+        </angularchart>
+      </md-content>
+    </md-card>
+  </div>
+
   <!-- Tweet Feed -->
   <div layout="row">
     <md-card flex>
