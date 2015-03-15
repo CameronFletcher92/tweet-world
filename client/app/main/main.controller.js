@@ -221,7 +221,7 @@ angular.module('tweetWorldApp')
           axis: "y",
           type: "line",
           thickness: "2px",
-          dotSize: 3,
+          dotSize: 2,
           id: "series_0"
         }
       ],
@@ -231,12 +231,9 @@ angular.module('tweetWorldApp')
           return moment(x).fromNow() + ' : ' + y;
         }
       },
-      stacks: [],
       lineMode: "linear",
-      tension: 0.7,
       drawLegend: true,
-      drawDots: true,
-      columnsHGap: 5
+      drawDots: false
     };
 
 
