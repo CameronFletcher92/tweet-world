@@ -9,147 +9,141 @@
   </div>
 </header>
 
-
-<!-- Main content (as cards) -->
-<div layout="column" layout-padding>
-
-  <div layout="row">
+<!-- Options and stats -->
+<div layout="row" layout-sm="column">
 
   <!-- Input Options -->
-    <md-card flex="66">
-      <md-toolbar class="md-primary">
-        <div class="md-toolbar-tools">
-          <span class="md-flex">Search Settings</span>
+  <md-card flex-sm flex-gt-sm="66">
+    <md-toolbar class="md-primary">
+      <div class="md-toolbar-tools">
+        <span class="md-flex">Search Settings</span>
+      </div>
+    </md-toolbar>
+
+    <md-content layout="column" layout-padding>
+      <form>
+        <!-- Text and Date Inputs -->
+        <div layout="row">
+          <md-input-container flex="60">
+            <label>Search for a keyword</label>
+            <input ng-model="searchText" ng-disabled="isSearching"/>
+          </md-input-container>
+          <md-input-container flex="40">
+            <label>Include tweets since:</label>
+            <input type="date" ng-model="searchDate" ng-disabled="isSearching"/>
+          </md-input-container>
         </div>
-      </md-toolbar>
 
-      <md-content layout="column" layout-padding>
-        <form>
-          <!-- Text and Date Inputs -->
-          <div layout="row">
-            <md-input-container flex="60">
-              <label>Search for a keyword</label>
-              <input ng-model="searchText" ng-disabled="isSearching" />
-            </md-input-container>
-            <md-input-container flex="40">
-              <label>Include tweets since:</label>
-              <input type="date" ng-model="searchDate" ng-disabled="isSearching" />
-            </md-input-container>
+        <!-- Buttons -->
+        <div layout="row" layout-align="center">
+          <div layout-margin>
+            <md-button class="md-raised md-primary" ng-disabled="isSearching" ng-click="searchTweets()">Search
+            </md-button>
           </div>
-
-          <!-- Buttons -->
-          <div layout="row" layout-align="center">
-            <div layout-margin>
-              <md-button class="md-raised md-primary" ng-disabled="isSearching" ng-click="searchTweets()">Search</md-button>
-            </div>
-            <div layout-margin>
-              <md-button class="md-raised md-primary" ng-disabled="!isSearching" ng-click="stopTweets()">Stop</md-button>
-            </div>
+          <div layout-margin>
+            <md-button class="md-raised md-primary" ng-disabled="!isSearching" ng-click="stopTweets()">Stop</md-button>
           </div>
-
-          <div layout="row">
-            <md-progress-linear ng-show="isSearching" md-mode="indeterminate"></md-progress-linear>
-          </div>
-        </form>
-      </md-content>
-    </md-card>
-
-    <!-- Statistics -->
-    <md-card flex>
-      <md-toolbar class="md-primary">
-        <div class="md-toolbar-tools">
-          <span class="md-flex">Stats</span>
         </div>
-      </md-toolbar>
 
-      <md-content layout-padding>
-        <md-list layout="column">
-          <md-item layout="row">
-            <div flex="66">
-              Total Tweets:
-            </div>
-            <div flex="33">
-              {{tweetCount}}
-            </div>
-          </md-item>
-          <md-item layout="row">
-            <div flex="66">
-              Location Tweets:
-            </div>
-            <div flex="33">
-              {{heatPoints.length}}
-            </div>
-          </md-item>
-          <md-item layout="row">
-            <div flex="66">
-              Tweets Per Second:
-            </div>
-            <div flex="33">
-              {{tweetRate}}
-            </div>
-          </md-item>
-        </md-list>
-      </md-content>
-    </md-card>
-  </div>
+        <div layout="row">
+          <md-progress-linear ng-show="isSearching" md-mode="indeterminate"></md-progress-linear>
+        </div>
+      </form>
+    </md-content>
+  </md-card>
 
+  <!-- Statistics -->
+  <md-card flex>
+    <md-toolbar class="md-primary">
+      <div class="md-toolbar-tools">
+        <span class="md-flex">Stats</span>
+      </div>
+    </md-toolbar>
+
+    <md-content layout-padding>
+      <md-list layout="column">
+        <md-item layout="row">
+          <div flex="66">
+            Total Tweets:
+          </div>
+          <div flex="33">
+            {{tweetCount}}
+          </div>
+        </md-item>
+        <md-item layout="row">
+          <div flex="66">
+            Location Tweets:
+          </div>
+          <div flex="33">
+            {{heatPoints.length}}
+          </div>
+        </md-item>
+        <md-item layout="row">
+          <div flex="66">
+            Tweets Per Second:
+          </div>
+          <div flex="33">
+            {{tweetRate}}
+          </div>
+        </md-item>
+      </md-list>
+    </md-content>
+  </md-card>
+</div>
+
+<!-- Result Content (as cards) -->
+<div layout="column">
   <!-- Map -->
-  <div layout="row">
-    <md-card flex>
-      <md-toolbar class="md-primary">
-        <div class="md-toolbar-tools">
-          <span class="md-flex">Map</span>
-        </div>
-      </md-toolbar>
+  <md-card flex>
+    <md-toolbar class="md-primary">
+      <div class="md-toolbar-tools">
+        <span class="md-flex">Map</span>
+      </div>
+    </md-toolbar>
 
-      <md-content layout="column" layout-align="center center" layout-padding>
-        <leaflet defaults="map.defaults" center="map.center" layers="map.layers" height="400px" width="100%"></leaflet>
-      </md-content>
-    </md-card>
-  </div>
+    <md-content layout="column" layout-align="center center" layout-padding>
+      <leaflet defaults="map.defaults" center="map.center" layers="map.layers" height="400px" width="100%"></leaflet>
+    </md-content>
+  </md-card>
 
   <!-- Chart -->
-  <div layout="row">
-    <md-card flex>
-      <md-toolbar class="md-primary">
-        <div class="md-toolbar-tools">
-          <span class="md-flex">Time Series</span>
-        </div>
-      </md-toolbar>
+  <md-card flex>
+    <md-toolbar class="md-primary">
+      <div class="md-toolbar-tools">
+        <span class="md-flex">Time Series</span>
+      </div>
+    </md-toolbar>
 
-      <md-content layout="column" layout-align="center center" layout-padding>
-        <linechart data="chartPoints" options="chartOptions" mode="" width="" height="400"></linechart>
-      </md-content>
-    </md-card>
-  </div>
+    <md-content layout="column" layout-align="center center" layout-padding>
+      <linechart data="chartPoints" options="chartOptions" mode="" width="" height="400"></linechart>
+    </md-content>
+  </md-card>
 
   <!-- Tweet Feed -->
-  <div layout="row">
-    <md-card flex>
-      <md-toolbar class="md-primary">
-        <div class="md-toolbar-tools">
-          <span class="md-flex">Tweet Feed</span>
-        </div>
-      </md-toolbar>
+  <md-card flex>
+    <md-toolbar class="md-primary">
+      <div class="md-toolbar-tools">
+        <span class="md-flex">Tweet Feed</span>
+      </div>
+    </md-toolbar>
 
-      <md-content layout-padding style="height: 400px">
-        <md-list class="scrollable">
-          <md-item ng-repeat="tweet in tweetFeed">
-            <md-item-content layout-margin>
-              <div class="md-tile-left" layout-margin>
-                <img ng-src="{{tweet.userpic}}">
-              </div>
-              <div class="md-tile-content" layout-margin layout-padding>
-                <h3>{{tweet.text}}</h3>
-                <p ng-show="tweet.coordinates"> ({{tweet.coordinates[0]}}, {{tweet.coordinates[1]}})</p>
-              </div>
-            </md-item-content>
-          </md-item>
-        </md-list>
-      </md-content>
-    </md-card>
-  </div>
+    <md-content layout-padding style="height: 400px">
+      <md-list class="scrollable">
+        <md-item ng-repeat="tweet in tweetFeed">
+          <md-item-content layout-margin>
+            <div class="md-tile-left" layout-margin>
+              <img ng-src="{{tweet.userpic}}">
+            </div>
+            <div class="md-tile-content" layout-margin layout-padding>
+              <h3>{{tweet.text}}</h3>
 
+              <p ng-show="tweet.coordinates"> ({{tweet.coordinates[0]}}, {{tweet.coordinates[1]}})</p>
+            </div>
+          </md-item-content>
+        </md-item>
+      </md-list>
+    </md-content>
+  </md-card>
 </div>
 
 <!-- the footer -->
