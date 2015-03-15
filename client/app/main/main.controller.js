@@ -1,6 +1,6 @@
 'use strict';
 var TWEET_FEED_LIMIT = 10;
-var RATE_INTERVAL = 500;
+var RATE_INTERVAL = 1000; // 1 second
 
 angular.module('tweetWorldApp')
   .controller('MainCtrl', function ($scope, $http, socket, Tweet, $mdDialog, $interval) {
@@ -8,8 +8,9 @@ angular.module('tweetWorldApp')
     // PRIVATE VARIABLES
     var _now = new Date();
     var _liveTweetCount = 0;
-    var _searchStartTime = null;
     var _lastSearchDate = null;
+    var _lastLiveTweetCount = 0;
+    var _newTweetCount = 0;
 
     // SCOPE VARIABLES
     // data collections
@@ -41,7 +42,6 @@ angular.module('tweetWorldApp')
       console.log('stopping stream');
       socket.emit('stopTweetStream', $scope.currentSearch);
 
-      _searchStartTime = null;
       $scope.isSearching = false;
       $scope.tweetRate = 0;
     };
@@ -57,8 +57,8 @@ angular.module('tweetWorldApp')
       $scope.isSearching = true;
 
       // always reset time series
-      _searchStartTime = new Date();
       _liveTweetCount = 0;
+      _lastLiveTweetCount = 0;
       $scope.chartPoints.length = 0;
 
 
@@ -164,6 +164,7 @@ angular.module('tweetWorldApp')
       );
     });
 
+
     // update the rates collection / current rate metric
     $interval(function() {
       // don't do anything if not searching
@@ -171,15 +172,20 @@ angular.module('tweetWorldApp')
         return;
       }
 
+      // get the number of new tweets since last interval
+      _newTweetCount = _liveTweetCount - _lastLiveTweetCount;
+
       var current = new Date();
-      var secDiff = (current - _searchStartTime) / 1000;
       var ratePoint = {
         date: current,
-        rate: roundDecimal(_liveTweetCount / secDiff)
+        rate: _newTweetCount
       };
 
       $scope.chartPoints.push(ratePoint);
       $scope.tweetRate = ratePoint.rate;
+
+      // set the last count as the current live count
+      _lastLiveTweetCount = _liveTweetCount;
 
     }, RATE_INTERVAL);
 
@@ -239,7 +245,7 @@ angular.module('tweetWorldApp')
       tooltip: {
         mode: "scrubber",
         formatter: function (x, y, series) {
-          return moment(x).fromNow() + ' : ' + y;
+          return x.toLocaleTimeString() + ' had ' + y + ' tweets';
         }
       },
       lineMode: "linear",
