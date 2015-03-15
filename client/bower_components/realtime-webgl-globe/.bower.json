@@ -1,0 +1,15 @@
+{
+  "name": "realtime-webgl-globe",
+  "homepage": "https://github.com/askmike/realtime-webgl-globe",
+  "_release": "8ef22a5fd3",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "8ef22a5fd3da0ba6d55f412176b57d70f9601b90"
+  },
+  "_source": "git://github.com/askmike/realtime-webgl-globe.git",
+  "_target": "*",
+  "_originalSource": "askmike/realtime-webgl-globe",
+  "_direct": true,
+  "main": ["globe.js"]
+}

@@ -18,8 +18,10 @@
     "angular-ui-router": "~0.2.10",
     "angular-material": "~0.8.3",
     "angular-leaflet-directive": "~0.7.11",
+    "n3-line-chart": "~1.1.6",
+    "three.js": "~0.70.0",
     "webgl-heatmap-leaflet": "*",
-    "n3-line-chart": "~1.1.6"
+    "realtime-webgl-globe": "*"
   },
   "devDependencies": {
     "angular-mocks": ">=1.2.*",
