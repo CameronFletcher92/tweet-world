@@ -2,13 +2,14 @@
 var TWEET_FEED_LIMIT = 10;
 
 angular.module('tweetWorldApp')
-  .controller('MainCtrl', function ($scope, $http, socket, Tweet, $mdDialog) {
+  .controller('MainCtrl', function ($scope, $http, socket, Tweet, $mdDialog, $interval) {
     /*
     TWEET MINING
      */
     // scope variables
     $scope.tweetFeed = [];
     $scope.heatPoints = [];
+    $scope.ratePoints = [];
     $scope.searchText = 'happy';
 
     var now = new Date();
@@ -17,6 +18,9 @@ angular.module('tweetWorldApp')
     $scope.currentSearch = '';
     $scope.isSearching = false;
     $scope.tweetCount = 0;
+    $scope.liveTweetCount = 0;
+
+    $scope.searchStartTime = null;
 
     $scope.stopTweets = function() {
       if ($scope.currentSearch === '') {
@@ -26,6 +30,7 @@ angular.module('tweetWorldApp')
       console.log('stopping stream');
       socket.emit('stopTweetStream', $scope.currentSearch);
       $scope.isSearching = false;
+      $scope.searchStartTime = null;
     };
 
     $scope.searchTweets = function() {
@@ -35,6 +40,7 @@ angular.module('tweetWorldApp')
 
       $scope.searchText = $scope.searchText.toLowerCase();
       $scope.isSearching = true;
+      $scope.searchStartTime = new Date();
 
       // if the search hasn't changed, just restart the stream
       if ($scope.currentSearch === $scope.searchText) {
@@ -51,6 +57,7 @@ angular.module('tweetWorldApp')
 
       // reset tweet feed/count
       $scope.tweetCount = 0;
+      $scope.liveTweetCount = 0;
       $scope.tweetFeed.length = 0;
 
       // work-around to force heatmap refresh
@@ -109,8 +116,9 @@ angular.module('tweetWorldApp')
         return;
       }
 
-      // increment the counter
+      // increment the counters
       $scope.tweetCount++;
+      $scope.liveTweetCount++;
 
       // add to the heat points
       if (tweet.coordinates) {
@@ -173,4 +181,28 @@ angular.module('tweetWorldApp')
         }
       }
     };
+
+
+    /*
+    TIMER
+     */
+    $interval(function() {
+      // don't do anything of not searching
+      if (!$scope.isSearching) {
+        return;
+      }
+
+      var now = new Date();
+      var secDiff = (now - $scope.searchStartTime) / 1000;
+      console.log(secDiff);
+      var ratePoint = {
+        date: now,
+        rate: ($scope.liveTweetCount / secDiff)
+      };
+
+      $scope.ratePoints.push(ratePoint);
+      console.log("RATE POINTS:");
+      console.log($scope.ratePoints);
+
+    }, 5000)
   });
