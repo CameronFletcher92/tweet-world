@@ -23,7 +23,7 @@ angular.module('tweetWorldApp')
         var lastAdd = new Date();
 
         scope.$watchCollection('points', function(newValue, oldValue) {
-          var newPoints = newValue.diff(oldValue);
+          var newPoints = _.difference(newValue, oldValue);
 
           if (newValue.length == 0) {
             globe.removeAllBlocks();
@@ -53,9 +53,3 @@ angular.module('tweetWorldApp')
       }
     };
   });
-
-// array diffing
-Array.prototype.diff = function(a) {
-  return this.filter(function(i) {return a.indexOf(i) < 0;});
-};
-
