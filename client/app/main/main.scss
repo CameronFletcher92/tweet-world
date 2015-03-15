@@ -9,12 +9,11 @@
 }
 
 .scrollable {
-  height: 500px;
   overflow: scroll;
 }
 
-.thing-form {
-    margin: 20px 0;
+.leaflet-control-layers.leaflet-control {
+  display: none;
 }
 
 #banner {

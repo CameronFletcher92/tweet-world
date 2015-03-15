@@ -12,9 +12,9 @@ angular.module('tweetWorldApp')
 
         var div = element.find('div')[0];
         var urls = {
-          earth: 'assets/world.jpg',
-          //bump: 'assets/bump.jpg',
-          //specular: 'assets/specular.jpg'
+          earth: 'assets/images/world.jpg',
+          bump: 'assets/images/bump.jpg',
+          specular: 'assets/images/specular.jpg'
         };
 
         // create a globe
