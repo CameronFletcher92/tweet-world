@@ -88,9 +88,9 @@ var Globe = function(container, urls) {
     container.addEventListener('resize', handle.resize, false);
 
     // Scroll for Chrome
-    container.addEventListener('mousewheel', handle.scroll, false);
+    //container.addEventListener('mousewheel', handle.scroll, false);
     // Scroll for Firefox
-    container.addEventListener('DOMMouseScroll', handle.scroll, false);
+    //container.addEventListener('DOMMouseScroll', handle.scroll, false);
 
     // Bootstrap render
     animate();
@@ -345,7 +345,7 @@ var Globe = function(container, urls) {
       altitude: 200 - (properties.size * 10) / 1.5,
       // speed at which block levitates outside
       // earth's core
-      levitation: .7,
+      levitation: 1.5,
 
       size: properties.size
     }
@@ -375,7 +375,7 @@ var Globe = function(container, urls) {
     var pos2d = calculate2dPosition(properties);
 
     // add altitute
-    pos2d.altitude = 200 + properties.size / 2;
+    pos2d.altitude = 200 + (properties.size * 10) / 2;
 
     // calculate 3d position
     set3dPosition(block, pos2d);
@@ -460,7 +460,8 @@ var Globe = function(container, urls) {
   // Transition the globe from its current position
   // to the new coordinates.
   api.center = function(pos) {
-    var newPos = {lat: pos.lat - 5, lon: pos.lon - 5}
+    // offset a bit so we can see the fancy animation
+    var newPos = {lat: pos.lat - 10, lon: pos.lon + 10}
     target = calculate2dPosition(newPos);
     return this;
   }

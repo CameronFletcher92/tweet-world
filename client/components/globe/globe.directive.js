@@ -20,10 +20,10 @@ angular.module('tweetWorldApp')
         // create a globe
         var globe = new Globe(div, urls);
         globe.init();
+        var lastAdd = new Date();
 
         scope.$watchCollection('points', function(newValue, oldValue) {
           var newPoints = newValue.diff(oldValue);
-          console.log(newPoints);
 
           if (newValue.length == 0) {
             globe.removeAllBlocks();
@@ -36,8 +36,16 @@ angular.module('tweetWorldApp')
                 lon: newPoints[i][1]
               };
 
-              globe.addLevitatingBlock(point);
-              globe.center({lat: point.lat, lon: point.lon});
+              var timeDiff = new Date() - lastAdd;
+
+              // only do the animation and recentering within some time for performance
+              if (timeDiff >= 100) {
+                globe.addLevitatingBlock(point);
+                globe.center({lat: point.lat, lon: point.lon});
+              } else {
+                globe.addBlock(point);
+              }
+              lastAdd = new Date();
             }
           }
 

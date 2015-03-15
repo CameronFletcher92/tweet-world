@@ -224,7 +224,7 @@ angular.module('tweetWorldApp')
       }
     };
 
-    // RATE CHART OPTIONS
+
     $scope.chartOptions = {
       axes: {
         x: {type: "date", key: "date"},
