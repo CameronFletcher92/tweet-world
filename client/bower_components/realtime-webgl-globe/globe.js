@@ -69,7 +69,7 @@ var Globe = function(container, urls) {
 
     // Add meshes to scene
     scene.add(earth);
-    scene.add(createMesh.atmosphere());
+    //scene.add(createMesh.atmosphere());
 
     // Add lights to scene
     scene.add(new THREE.AmbientLight(0x656565));
@@ -342,11 +342,10 @@ var Globe = function(container, urls) {
       x: pos2d.x,
       y: pos2d.y,
 
-
-      altitude: 200 - properties.size / 1.5,
+      altitude: 200 - (properties.size * 10) / 1.5,
       // speed at which block levitates outside
       // earth's core
-      levitation: .1,
+      levitation: .7,
 
       size: properties.size
     }
@@ -357,7 +356,7 @@ var Globe = function(container, urls) {
     // rotate towards earth
     block.lookAt(earthPosition);
 
-    block.scale.z = properties.size;
+    block.scale.z = properties.size * 10;
     block.scale.x = properties.size;
     block.scale.y = properties.size;
 
@@ -384,7 +383,7 @@ var Globe = function(container, urls) {
     // rotate towards earth
     block.lookAt(earthPosition);
 
-    block.scale.z = 10000;
+    block.scale.z = properties.size * 10;
     block.scale.x = properties.size;
     block.scale.y = properties.size;
 
@@ -461,7 +460,8 @@ var Globe = function(container, urls) {
   // Transition the globe from its current position
   // to the new coordinates.
   api.center = function(pos) {
-    target = calculate2dPosition(pos);
+    var newPos = {lat: pos.lat - 5, lon: pos.lon - 5}
+    target = calculate2dPosition(newPos);
     return this;
   }
 

@@ -13,8 +13,8 @@ angular.module('tweetWorldApp')
         var div = element.find('div')[0];
         var urls = {
           earth: 'assets/world.jpg',
-          bump: 'assets/bump.jpg',
-          specular: 'assets/specular.jpg'
+          //bump: 'assets/bump.jpg',
+          //specular: 'assets/specular.jpg'
         };
 
         // create a globe
@@ -31,7 +31,7 @@ angular.module('tweetWorldApp')
             for (var i = 0; i < newPoints.length; i++) {
               var point = {
                 color: '#FF0000',
-                size: 10,
+                size: 5,
                 lat: newPoints[i][0],
                 lon: newPoints[i][1]
               };
