@@ -9,7 +9,7 @@ angular.module('tweetWorldApp', [
   'ui.bootstrap',
   'ngMaterial',
   'leaflet-directive',
-  'angularChart'
+  'n3-line-chart'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
     $urlRouterProvider

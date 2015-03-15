@@ -187,7 +187,7 @@ angular.module('tweetWorldApp')
 
 
     /*
-    TIMER
+    CHART
      */
     $interval(function() {
       // don't do anything of not searching
@@ -206,27 +206,35 @@ angular.module('tweetWorldApp')
 
     }, 1000);
 
-
-    $scope.chartSchema = {
-      date: {
-        type: 'datetime',
-        format: '%Y-%m-%d_%H:%M:%S',
-        name: 'Date'
-      },
-      rate: {
-        type: 'numeric',
-        name: 'Tweets per second'
-      }
-    };
-
     $scope.chartOptions = {
-      rows: [{
-        key: 'rate',
-        type: 'line'
-      }],
-      xAxis: {
-        key: 'date',
-        displayFormat: '%Y-%m-%d %H:%M:%S'
-      }
+      axes: {
+        x: {type: "date", key: "date"},
+        y: {type: "linear"}
+      },
+      series: [
+        {
+          y: "rate",
+          label: "Tweets per second",
+          color: "#3F51B5",
+          axis: "y",
+          type: "line",
+          thickness: "2px",
+          dotSize: 3,
+          id: "series_0"
+        }
+      ],
+      tooltip: {
+        mode: "scrubber",
+        formatter: function (x, y, series) {
+          return moment(x).fromNow() + ' : ' + Math.round(y * 100) / 100;
+        }
+      },
+      stacks: [],
+      lineMode: "linear",
+      tension: 0.7,
+      drawLegend: true,
+      drawDots: true,
+      columnsHGap: 5
     };
+
   });
