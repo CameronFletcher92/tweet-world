@@ -5,10 +5,12 @@ angular.module('tweetWorldApp')
     return {
       template: '<div style="height: 100%; width: 100%;"></div>',
       restrict: 'EA',
+      scope: {
+        points: "=points"
+      },
       link: function (scope, element, attrs) {
-        var div = element.find('div')[0];
-        //div.text('this is the globe node');
 
+        var div = element.find('div')[0];
         var urls = {
           earth: 'assets/world.jpg',
           bump: 'assets/bump.jpg',
@@ -18,7 +20,34 @@ angular.module('tweetWorldApp')
         // create a globe
         var globe = new Globe(div, urls);
         globe.init();
-        //element.text('this is the globe directive');
+
+        scope.$watchCollection('points', function(newValue, oldValue) {
+          var newPoints = newValue.diff(oldValue);
+          console.log(newPoints);
+
+          if (newValue.length == 0) {
+            globe.removeAllBlocks();
+          } else {
+            for (var i = 0; i < newPoints.length; i++) {
+              var point = {
+                color: '#FF0000',
+                size: 10,
+                lat: newPoints[i][0],
+                lon: newPoints[i][1]
+              };
+
+              globe.addLevitatingBlock(point);
+              globe.center({lat: point.lat, lon: point.lon});
+            }
+          }
+
+        });
       }
     };
   });
+
+// array diffing
+Array.prototype.diff = function(a) {
+  return this.filter(function(i) {return a.indexOf(i) < 0;});
+};
+

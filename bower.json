@@ -19,7 +19,7 @@
     "angular-material": "~0.8.3",
     "angular-leaflet-directive": "~0.7.11",
     "n3-line-chart": "~1.1.6",
-    "three.js": "~0.70.0",
+    "threejs": "https://raw.githubusercontent.com/mrdoob/three.js/master/build/three.min.js",
     "webgl-heatmap-leaflet": "*",
     "realtime-webgl-globe": "*"
   },

@@ -256,6 +256,7 @@ angular.module('tweetWorldApp')
 
     // PRIVATE FUNCTIONS
     // flip the order of the co-ords (map doesn't use geojson)
+    // heatmap expects LAT then LNG
     function generateHeatPoint(tweet) {
       return [tweet.coordinates[1], tweet.coordinates[0], 0.2];
     }

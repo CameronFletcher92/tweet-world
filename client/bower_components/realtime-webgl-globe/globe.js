@@ -384,7 +384,7 @@ var Globe = function(container, urls) {
     // rotate towards earth
     block.lookAt(earthPosition);
 
-    block.scale.z = properties.size;
+    block.scale.z = 10000;
     block.scale.x = properties.size;
     block.scale.y = properties.size;
 
