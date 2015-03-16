@@ -9,6 +9,10 @@ angular.module('tweetWorldApp')
         points: "=points"
       },
       link: function (scope, element, attrs) {
+        // private functions
+        function rgbToHex(r, g, b) {
+          return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        }
 
         var div = element.find('div')[0];
         var urls = {
@@ -39,16 +43,20 @@ angular.module('tweetWorldApp')
               };
 
               // get the number of points at the same co-ords
-              var matchingPoints = _.filter(oldValue, function(existingPoint) {
+              var matchingPoints = _.filter(oldValue.concat(newValue), function(existingPoint) {
                 return ((existingPoint[0] == point.lat && existingPoint[1] == point.lon));
               });
 
               // do some modification if there were matches
-              if (matchingPoints.length > 0) {
-                console.log('found matches!');
-                point.size = 2 * (matchingPoints.length * 1.1);
-                point.height = 30 * (matchingPoints.length * 1.1);
-                point.color = '#FF0000';
+              if (matchingPoints.length > 1) {
+                console.log("MATCH FOUND!");
+                point.height = matchingPoints.length * point.height;
+                //point.size = matchingPoints.length * point.size;
+
+                // get the colour
+                var r = 0;
+                if (70 * matchingPoints.length < 255) {r = 70 * matchingPoints.length} else {r = 255}
+                point.color = rgbToHex(r, 0, 0);
               }
 
               var timeDiff = new Date() - lastAdd;
