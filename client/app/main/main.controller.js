@@ -7,10 +7,15 @@ angular.module('tweetWorldApp')
 
     // PRIVATE VARIABLES
     var _now = new Date();
-    var _liveTweetCount = 0;
     var _lastSearchDate = null;
+
+    var _liveTweetCount = 0;
     var _lastLiveTweetCount = 0;
     var _newTweetCount = 0;
+
+    var _locationTweetCount = 0;
+    var _lastLocationTweetCount = 0;
+    var _newLocationTweetCount = 0;
 
     // SCOPE VARIABLES
     // data collections
@@ -31,6 +36,7 @@ angular.module('tweetWorldApp')
     // statistics
     $scope.tweetRate = 0;
     $scope.tweetCount = 0;
+    $scope.locationTweetRate = 0;
 
 
     // BUTTON HANDLERS
@@ -44,6 +50,7 @@ angular.module('tweetWorldApp')
 
       $scope.isSearching = false;
       $scope.tweetRate = 0;
+      $scope.locationTweetRate = 0;
     };
 
 
@@ -141,6 +148,7 @@ angular.module('tweetWorldApp')
       // add to the heat points
       if (tweet.coordinates) {
         $scope.heatPoints.push(generateHeatPoint(tweet));
+        _locationTweetCount++;
       }
 
       // prepend the new tweet, pop the end if the array is over size
@@ -164,7 +172,6 @@ angular.module('tweetWorldApp')
       );
     });
 
-
     // update the rates collection / current rate metric
     $interval(function () {
       // don't do anything if not searching
@@ -174,18 +181,22 @@ angular.module('tweetWorldApp')
 
       // get the number of new tweets since last interval
       _newTweetCount = _liveTweetCount - _lastLiveTweetCount;
+      _newLocationTweetCount = _locationTweetCount - _lastLocationTweetCount;
 
       var current = new Date();
       var ratePoint = {
         date: current,
-        rate: _newTweetCount
+        rate: _newTweetCount,
+        locationRate: _newLocationTweetCount
       };
 
       $scope.chartPoints.push(ratePoint);
       $scope.tweetRate = ratePoint.rate;
+      $scope.locationTweetRate = ratePoint.locationRate;
 
       // set the last count as the current live count
       _lastLiveTweetCount = _liveTweetCount;
+      _lastLocationTweetCount = _locationTweetCount;
 
     }, RATE_INTERVAL);
 
@@ -241,6 +252,16 @@ angular.module('tweetWorldApp')
           thickness: "2px",
           dotSize: 2,
           id: "series_0"
+        },
+        {
+          y: "locationRate",
+          label: "Location Tweets per second",
+          color: "#009688",
+          axis: "y",
+          type: "line",
+          thickness: "2px",
+          dotSize: 2,
+          id: "series_1"
         }
       ],
       tooltip: {
