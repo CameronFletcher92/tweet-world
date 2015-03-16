@@ -16,7 +16,7 @@
 var Globe = function(container, urls) {
   var PI = Math.PI;
   var PI_HALF = PI / 2;
-  var HEIGHT = 50;
+  var HEIGHT = 30;
 
   // Three.js objects
   var camera;
@@ -169,7 +169,7 @@ var Globe = function(container, urls) {
     },
 
     directionalLight: function() {
-      return new THREE.DirectionalLight(0xcccccc, 0.5);
+      return new THREE.DirectionalLight(0xcccccc, 0.6);
     },
 
 
