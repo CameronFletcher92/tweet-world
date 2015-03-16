@@ -245,20 +245,20 @@ angular.module('tweetWorldApp')
       series: [
         {
           y: "rate",
-          label: "Tweets per second",
+          label: "Tweets / second",
           color: "#3F51B5",
           axis: "y",
-          type: "line",
+          type: "area",
           thickness: "2px",
           dotSize: 2,
           id: "series_0"
         },
         {
           y: "locationRate",
-          label: "Location Tweets per second",
+          label: "Location Tweets / second",
           color: "#E91E63",
           axis: "y",
-          type: "line",
+          type: "area",
           thickness: "2px",
           dotSize: 2,
           id: "series_1"
