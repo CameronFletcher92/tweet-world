@@ -12,7 +12,7 @@ angular.module('tweetWorldApp')
         heightCap: '=?'
       },
 
-      controller: function($scope, $element){
+      controller: function ($scope, $element) {
         // check optionals
         $scope.heightsPerPoint = $scope.heightsPerPoint || 10;
         $scope.pointSize = $scope.pointSize || 3;
@@ -43,46 +43,80 @@ angular.module('tweetWorldApp')
 
         // Points collection changed
         var _lastAdd = new Date();
-        $scope.$watchCollection('points', function (newValue, oldValue) {
-          var newPoints = _.difference(newValue, oldValue);
+        var _globePoints = [];
 
+        $scope.$watchCollection('points', function (newValue, oldValue) {
+          // remove the blocks if points were cleared
           if (newValue.length == 0) {
             $scope.globe.removeAllBlocks();
-          } else {
-            // add each new point
-            for (var i = 0; i < newPoints.length; i++) {
-              var point = {
-                lat: newPoints[i][0],
-                lon: newPoints[i][1],
-                size: $scope.pointSize
-              };
-
-              // get the number of points at the same co-ords (including itself)
-              var pointCount = (_.filter(oldValue.concat(newValue), function (existingPoint) {
-                return existingPoint[0] == point.lat && existingPoint[1] == point.lon;
-              })).length;
-
-              // do some modification if there were matches (other than itself)
-              // base height on number of matches
-              point.height = pointCount * $scope.heightPerPoint;
-
-              // base color on number of matches
-              point.color = colorFn(pointCount);
-
-              var timeDiff = new Date() - _lastAdd;
-
-              // only do the animation and recentering within some time for performance
-              if (timeDiff >= 100) {
-                $scope.globe.addLevitatingBlock(point);
-                $scope.globe.center({lat: point.lat, lon: point.lon});
-              } else {
-                $scope.globe.addBlock(point);
-              }
-
-              _lastAdd = new Date();
-            }
+            return;
           }
 
+          // get the changes to the points
+          var newPoints = _.difference(newValue, oldValue);
+
+          // iterate through the new points
+          _.forEach(newPoints, function(newPoint) {
+
+            // get the number of points at the same co-ords (including itself)
+            var matchingPoints = _.filter(oldValue.concat(newValue), function (existingPoint) {
+              return existingPoint[0] == newPoint[0] && existingPoint[1] == newPoint[1];
+            });
+
+            var pointCount = matchingPoints.length;
+
+            var newGlobePoint;
+
+            // update the existing block's attributes if the co-ords exist, otherwise create a new one
+            if (pointCount > 1) {
+              // a point for these co-ordinates already exists, update its block
+              var existingGlobePoint = _.first(_.filter(_globePoints, function(point) {
+                return point.lat == newPoint[0] && point.lon == newPoint[1];
+              }));
+
+
+              // remove its block from the scene
+              $scope.globe.removeBlock(existingGlobePoint.block);
+              existingGlobePoint.block = null;
+
+              // fix up its properties, and re-add a block for it
+              existingGlobePoint.height = $scope.heightPerPoint * pointCount;
+              if (existingGlobePoint.height >= $scope.heightCap) {
+                existingGlobePoint.height = $scope.heightCap;
+              }
+              existingGlobePoint.color = colorFn(pointCount);
+
+              newGlobePoint = existingGlobePoint;
+
+            } else if (pointCount == 1) {
+              // create a new globe point, with default attributes
+              newGlobePoint = {
+                lat: newPoint[0],
+                lon: newPoint[1],
+                size: $scope.pointSize,
+                height: $scope.heightPerPoint,
+                color: colorFn(pointCount)
+              };
+
+            }
+
+            var newBlock;
+
+            // only do the animation and recentering within some time for performance
+            var timeDiff = new Date() - _lastAdd;
+            if (timeDiff >= 100) {
+              newBlock = $scope.globe.addLevitatingBlock(newGlobePoint);
+              $scope.globe.center(newGlobePoint);
+            } else {
+              newBlock = $scope.globe.addBlock(newGlobePoint);
+            }
+            _lastAdd = new Date();
+
+            // attach the new block to the globePoint
+            newGlobePoint.block = newBlock;
+            _globePoints.push(newGlobePoint);
+
+          });
         });
       },
 

@@ -501,7 +501,8 @@ var Globe = function(container, urls) {
     levitatingBlocks.push(block);
     blocks.push(block);
 
-    return this;
+    // attach the block property to the data
+    return block;
   }
 
   // @param Object data
@@ -520,7 +521,7 @@ var Globe = function(container, urls) {
     scene.add(block);
     blocks.push(block);
 
-    return this;
+    return block;
   }
 
   // Remove all blocks from the globe.
@@ -532,6 +533,10 @@ var Globe = function(container, urls) {
     blocks = [];
 
     return this;
+  }
+
+  api.removeBlock = function(block) {
+    scene.remove(block);
   }
 
 
