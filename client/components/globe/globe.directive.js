@@ -58,48 +58,56 @@ angular.module('tweetWorldApp')
           // iterate through the new points
           _.forEach(newPoints, function(newPoint) {
 
-            // get the number of points at the same co-ords (including itself)
-            var matchingPoints = _.filter(oldValue.concat(newValue), function (existingPoint) {
-              return existingPoint[0] == newPoint[0] && existingPoint[1] == newPoint[1];
-            });
+            // see if there is already a globe point for these co-ords
+            var matchingGlobePoint = _.first(_.filter(_globePoints, function(globePoint) {
+              return globePoint.lat == newPoint[0] && globePoint.lon == newPoint[1];
+            }));
 
-            var pointCount = matchingPoints.length;
+            // get the count of points with these co-ords (the magnitude)
+            var newMagnitude = _.filter(oldValue.concat(newValue), function (existingPoint) {
+              return existingPoint[0] == newPoint[0] && existingPoint[1] == newPoint[1];
+            }).length;
 
             var newGlobePoint;
 
-            // update the existing block's attributes if the co-ords exist, otherwise create a new one
-            if (pointCount > 1) {
-              // a point for these co-ordinates already exists, update its block
-              var existingGlobePoint = _.first(_.filter(_globePoints, function(point) {
-                return point.lat == newPoint[0] && point.lon == newPoint[1];
-              }));
+            // if there is, update its properties
+            if (matchingGlobePoint) {
 
-
-              // remove its block from the scene
-              $scope.globe.removeBlock(existingGlobePoint.block);
-              existingGlobePoint.block = null;
-
-              // fix up its properties, and re-add a block for it
-              existingGlobePoint.height = $scope.heightPerPoint * pointCount;
-              if (existingGlobePoint.height >= $scope.heightCap) {
-                existingGlobePoint.height = $scope.heightCap;
+              // if there are duplicates in the cache, skip them (only create a block for their co-ords once)
+              if (!matchingGlobePoint.magnitude || matchingGlobePoint.magnitude == newMagnitude) {
+                return;
               }
-              existingGlobePoint.color = colorFn(pointCount);
 
-              newGlobePoint = existingGlobePoint;
+              // remove its block from the scene, and the globe point from the list (it will be re-added)
+              $scope.globe.removeBlock(matchingGlobePoint.block);
+              matchingGlobePoint.block = null;
+              var index = _globePoints.indexOf(matchingGlobePoint);
+              _globePoints.splice(index, 1);
 
-            } else if (pointCount == 1) {
-              // create a new globe point, with default attributes
+              // update its properties
+              matchingGlobePoint.magnitude = newMagnitude;
+              matchingGlobePoint.height = $scope.heightPerPoint * newMagnitude;
+              matchingGlobePoint.color = colorFn(newMagnitude);
+              newGlobePoint = matchingGlobePoint;
+
+            } else {
+              // create a new globe point, with multiplied attributes
               newGlobePoint = {
                 lat: newPoint[0],
                 lon: newPoint[1],
                 size: $scope.pointSize,
-                height: $scope.heightPerPoint,
-                color: colorFn(pointCount)
+                magnitude: newMagnitude,
+                height: $scope.heightPerPoint * newMagnitude,
+                color: colorFn(newMagnitude)
               };
-
             }
 
+            // cap the height
+            if (newGlobePoint.height >= $scope.heightCap) {
+              newGlobePoint.height = $scope.heightCap;
+            }
+
+            // add to the scene and globePoints
             var newBlock;
 
             // only do the animation and recentering within some time for performance
@@ -111,8 +119,6 @@ angular.module('tweetWorldApp')
               newBlock = $scope.globe.addBlock(newGlobePoint);
             }
             _lastAdd = new Date();
-
-            // attach the new block to the globePoint
             newGlobePoint.block = newBlock;
             _globePoints.push(newGlobePoint);
 
