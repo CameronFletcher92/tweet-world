@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tweetWorldApp')
-  .directive('twGlobe', function () {
+  .directive('globe', function () {
     return {
       template: '<div style="height: 100%; width: 100%;"></div>',
       restrict: 'EA',
