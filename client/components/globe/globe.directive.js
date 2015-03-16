@@ -46,10 +46,11 @@ angular.module('tweetWorldApp')
         var _globePoints = [];
 
         $scope.$watchCollection('points', function (newValue, oldValue) {
-          // remove the blocks if points were cleared
-          if (newValue.length == 0) {
+
+          // remove all the globe points (and blocks)
+          if (newValue.length <= 1) {
+            _globePoints.length = 0;
             $scope.globe.removeAllBlocks();
-            return;
           }
 
           // get the changes to the points
@@ -123,6 +124,7 @@ angular.module('tweetWorldApp')
             _globePoints.push(newGlobePoint);
 
           });
+
         });
       },
 
