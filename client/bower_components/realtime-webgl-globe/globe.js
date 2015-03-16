@@ -20,7 +20,6 @@ var Globe = function(container, urls) {
   // Three.js objects
   var camera;
   var scene;
-  var light;
   var renderer;
 
   var earthGeometry;
@@ -60,9 +59,6 @@ var Globe = function(container, urls) {
     // Earth geom, used for earth & atmosphere
     earthGeometry = new THREE.SphereGeometry(200, 64, 64);
 
-    // Light, reposition close to camera
-    light = createMesh.directionalLight();
-
     // we use this to correctly position camera and blocks
     var earth = createMesh.earth(urls);
     earthPosition = earth.position;
@@ -72,8 +68,7 @@ var Globe = function(container, urls) {
     scene.add(createMesh.atmosphere());
 
     // Add lights to scene
-    scene.add(new THREE.AmbientLight(0x656565));
-    scene.add(light);
+    scene.add(new THREE.AmbientLight(0x606060));
 
     // Renderer
     renderer = new THREE.WebGLRenderer({antialias: true});
@@ -167,15 +162,10 @@ var Globe = function(container, urls) {
       return mesh;
     },
 
-    directionalLight: function() {
-      return new THREE.DirectionalLight(0xcccccc, 0.6);
-    },
-
-
     block: function(color) {
       return new THREE.Mesh(
         new THREE.BoxGeometry(1, 1, 1),
-        new THREE.MeshLambertMaterial({color: color, emissive: color})
+        new THREE.MeshLambertMaterial({color: color, emissive: color, transparent:true, opacity:0.9})
       );
     }
 
@@ -278,13 +268,6 @@ var Globe = function(container, urls) {
     set3dPosition(camera, {
       x: rotation.x,
       y: rotation.y,
-      altitude: distance
-    });
-
-    // Determine light position based
-    set3dPosition(light, {
-      x: rotation.x - 150,
-      y: rotation.y - 150,
       altitude: distance
     });
 

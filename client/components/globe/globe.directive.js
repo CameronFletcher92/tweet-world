@@ -57,6 +57,10 @@ angular.module('tweetWorldApp')
 
           // iterate through the new points
           _.forEach(newPoints, function(newPoint) {
+            // skip any dummy points
+            if (newPoint[0] == 0 && newPoint[1] == 0) {
+              return;
+            }
 
             // see if there is already a globe point for these co-ords
             var matchingGlobePoint = _.first(_.filter(_globePoints, function(globePoint) {
@@ -74,7 +78,9 @@ angular.module('tweetWorldApp')
             if (matchingGlobePoint) {
 
               // if there are duplicates in the cache, skip them (only create a block for their co-ords once)
-              if (!matchingGlobePoint.magnitude || matchingGlobePoint.magnitude == newMagnitude) {
+              if (!matchingGlobePoint.magnitude
+                || matchingGlobePoint.magnitude == newMagnitude
+                || matchingGlobePoint.height == $scope.heightCap) {
                 return;
               }
 
