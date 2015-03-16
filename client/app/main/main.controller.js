@@ -257,10 +257,10 @@ angular.module('tweetWorldApp')
 
     // PRIVATE FUNCTIONS
     // flip the order of the co-ords (map doesn't use geojson)
-    // heatmap expects LAT then LNG
+    // heatmap and globe both expect LAT then LON
     function generateHeatPoint(tweet) {
-      return [tweet.coordinates[1], tweet.coordinates[0], 0.2];
-      //return [50, 80, 0.2];
+      //return [tweet.coordinates[1], tweet.coordinates[0], 0.2];
+      return [50, 80, 0.2];
     }
 
     function roundDecimal(decimal) {

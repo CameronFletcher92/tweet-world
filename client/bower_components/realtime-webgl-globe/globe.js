@@ -345,7 +345,7 @@ var Globe = function(container, urls) {
       altitude: 200 - (properties.height) / 1.5,
       // speed at which block levitates outside
       // earth's core
-      levitation: 1.5,
+      levitation: 0.9,
 
       size: properties.size,
       height: properties.height

@@ -42,7 +42,6 @@ angular.module('tweetWorldApp')
         }
 
         // Points collection changed
-        var _lastAdd = new Date();
         var _globePoints = [];
 
         $scope.$watchCollection('points', function (newValue, oldValue) {
@@ -110,21 +109,13 @@ angular.module('tweetWorldApp')
 
             // add to the scene and globePoints
             var newBlock;
-
-            // only do the animation and recentering within some time for performance
-            var timeDiff = new Date() - _lastAdd;
-            if (timeDiff >= 100) {
-              newBlock = $scope.globe.addLevitatingBlock(newGlobePoint);
-              $scope.globe.center(newGlobePoint);
-            } else {
-              newBlock = $scope.globe.addBlock(newGlobePoint);
-            }
-            _lastAdd = new Date();
+            newBlock = $scope.globe.addLevitatingBlock(newGlobePoint);
             newGlobePoint.block = newBlock;
             _globePoints.push(newGlobePoint);
 
+            // center the map
+            $scope.globe.center(newGlobePoint);
           });
-
         });
       },
 
