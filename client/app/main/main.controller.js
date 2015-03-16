@@ -260,7 +260,6 @@ angular.module('tweetWorldApp')
     // heatmap expects LAT then LNG
     function generateHeatPoint(tweet) {
       return [tweet.coordinates[1], tweet.coordinates[0], 0.2];
-      //return [50, 20, 0.2];
     }
 
     function roundDecimal(decimal) {
