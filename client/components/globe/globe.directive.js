@@ -55,7 +55,7 @@ angular.module('tweetWorldApp')
               var point = {
                 color: '#0000FF',
                 size: 2,
-                height: 15,
+                height: 12,
                 lat: newPoints[i][0],
                 lon: newPoints[i][1]
               };
