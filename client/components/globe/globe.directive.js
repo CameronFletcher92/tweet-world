@@ -6,10 +6,18 @@ angular.module('tweetWorldApp')
       template: '<div style="height: 100%; width: 100%;"></div>',
       restrict: 'EA',
       scope: {
-        points: "=points"
+        points: '=',
+        heightPerPoint: '=?',
+        pointSize: '=?',
+        heightCap: '=?'
       },
 
       controller: function($scope, $element){
+        // check optionals
+        $scope.heightsPerPoint = $scope.heightsPerPoint || 10;
+        $scope.pointSize = $scope.pointSize || 3;
+        $scope.heightCap = $scope.heightCap || 500;
+
         // private functions
         function rgbToHex(r, g, b) {
           return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
@@ -90,10 +98,6 @@ angular.module('tweetWorldApp')
         globe.init();
         // assign the globe to the scope
         scope.globe = globe;
-
-        // assign the other attributes to the scope
-        scope.heightPerPoint = attrs.heightPerPoint || 15;
-        scope.pointSize = attrs.pointSize || 2;
       }
     };
   });
