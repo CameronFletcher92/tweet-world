@@ -70,7 +70,7 @@ var Globe = function(container, urls) {
 
     // Add meshes to scene
     scene.add(earth);
-    //scene.add(createMesh.atmosphere());
+    scene.add(createMesh.atmosphere());
 
     // Add lights to scene
     scene.add(new THREE.AmbientLight(0x656565));
@@ -155,12 +155,13 @@ var Globe = function(container, urls) {
           'varying vec3 vNormal;',
           'void main() {',
             'float intensity = pow( 0.8 - dot( vNormal, vec3( 0, 0, 1.0 ) ), 7.0 );',
-            'gl_FragColor = vec4( 0.7, 1.0, 0.7, 1.0 ) * intensity;',
+            //'gl_FragColor = vec4( 0.7, 1.0, 0.7, 1.0 ) * intensity;',
+            'gl_FragColor = vec4( 1.0, 1.0, 1.0, 1.0 ) * intensity;',
           '}'
         ].join('\n'),
         side: THREE.BackSide,
         blending: THREE.AdditiveBlending,
-        transparent: false
+        transparent: true
       });
 
       var mesh = new THREE.Mesh(earthGeometry, material);
