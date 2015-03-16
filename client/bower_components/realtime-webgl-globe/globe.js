@@ -16,6 +16,7 @@
 var Globe = function(container, urls) {
   var PI = Math.PI;
   var PI_HALF = PI / 2;
+  var HEIGHT = 50;
 
   // Three.js objects
   var camera;
@@ -342,7 +343,7 @@ var Globe = function(container, urls) {
       x: pos2d.x,
       y: pos2d.y,
 
-      altitude: 200 - (properties.size * 10) / 1.5,
+      altitude: 200 - (HEIGHT) / 1.5,
       // speed at which block levitates outside
       // earth's core
       levitation: 1.5,
@@ -356,7 +357,7 @@ var Globe = function(container, urls) {
     // rotate towards earth
     block.lookAt(earthPosition);
 
-    block.scale.z = properties.size * 10;
+    block.scale.z = HEIGHT;
     block.scale.x = properties.size;
     block.scale.y = properties.size;
 
@@ -375,7 +376,7 @@ var Globe = function(container, urls) {
     var pos2d = calculate2dPosition(properties);
 
     // add altitute
-    pos2d.altitude = 200 + (properties.size * 10) / 2;
+    pos2d.altitude = 200 + (HEIGHT) / 2;
 
     // calculate 3d position
     set3dPosition(block, pos2d);
@@ -383,7 +384,7 @@ var Globe = function(container, urls) {
     // rotate towards earth
     block.lookAt(earthPosition);
 
-    block.scale.z = properties.size * 10;
+    block.scale.z = HEIGHT;
     block.scale.x = properties.size;
     block.scale.y = properties.size;
 
@@ -400,7 +401,7 @@ var Globe = function(container, urls) {
       var userData = block.userData;
 
       // if entirely outide of earth, stop levitating
-      if(userData.altitude > 200 + userData.size / 2) {
+      if(userData.altitude > 200 + HEIGHT / 2) {
         levitatingBlocks.splice(i, 1);
         return;
       }

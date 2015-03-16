@@ -30,8 +30,8 @@ angular.module('tweetWorldApp')
           } else {
             for (var i = 0; i < newPoints.length; i++) {
               var point = {
-                color: '#FF0000',
-                size: 5,
+                color: '#0000FF',
+                size: 2,
                 lat: newPoints[i][0],
                 lon: newPoints[i][1]
               };
