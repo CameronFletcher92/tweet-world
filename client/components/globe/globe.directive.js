@@ -28,13 +28,28 @@ angular.module('tweetWorldApp')
           if (newValue.length == 0) {
             globe.removeAllBlocks();
           } else {
+            // add each new point
             for (var i = 0; i < newPoints.length; i++) {
               var point = {
                 color: '#0000FF',
                 size: 2,
+                height: 30,
                 lat: newPoints[i][0],
                 lon: newPoints[i][1]
               };
+
+              // get the number of points at the same co-ords
+              var matchingPoints = _.filter(oldValue, function(existingPoint) {
+                return ((existingPoint[0] == point.lat && existingPoint[1] == point.lon));
+              });
+
+              // do some modification if there were matches
+              if (matchingPoints.length > 0) {
+                console.log('found matches!');
+                point.size = 2 * (matchingPoints.length * 1.1);
+                point.height = 30 * (matchingPoints.length * 1.1);
+                point.color = '#FF0000';
+              }
 
               var timeDiff = new Date() - lastAdd;
 
