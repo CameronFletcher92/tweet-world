@@ -256,7 +256,7 @@ angular.module('tweetWorldApp')
         {
           y: "locationRate",
           label: "Location Tweets per second",
-          color: "#009688",
+          color: "#E91E63",
           axis: "y",
           type: "line",
           thickness: "2px",

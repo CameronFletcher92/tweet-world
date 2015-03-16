@@ -30,23 +30,23 @@
           </md-input-container>
           <md-input-container flex="40">
             <label>Include tweets since:</label>
-            <input type="date" ng-model="searchDate" ng-disabled="isSearching"/>
+            <input class="md-accent" type="date" ng-model="searchDate" ng-disabled="isSearching"/>
           </md-input-container>
         </div>
 
         <!-- Buttons -->
         <div layout="row" layout-align="center">
           <div layout-margin>
-            <md-button class="md-raised md-primary" ng-disabled="isSearching" ng-click="searchTweets()">Search
+            <md-button class="md-raised md-accent" ng-disabled="isSearching" ng-click="searchTweets()">Search
             </md-button>
           </div>
           <div layout-margin>
-            <md-button class="md-raised md-primary" ng-disabled="!isSearching" ng-click="stopTweets()">Stop</md-button>
+            <md-button class="md-raised md-accent" ng-disabled="!isSearching" ng-click="stopTweets()">Stop</md-button>
           </div>
         </div>
 
         <div layout="row">
-          <md-progress-linear ng-show="isSearching" md-mode="indeterminate"></md-progress-linear>
+          <md-progress-linear class="md-accent" ng-show="isSearching" md-mode="indeterminate"></md-progress-linear>
         </div>
       </form>
     </md-content>

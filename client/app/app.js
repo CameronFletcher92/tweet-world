@@ -11,9 +11,14 @@ angular.module('tweetWorldApp', [
   'leaflet-directive',
   'n3-line-chart'
 ])
-  .config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
+  .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $mdThemingProvider) {
     $urlRouterProvider
       .otherwise('/');
 
     $locationProvider.html5Mode(true);
+
+    // setup the theme
+    $mdThemingProvider.theme('default')
+      .primaryPalette('indigo')
+      .accentPalette('pink');
   });
