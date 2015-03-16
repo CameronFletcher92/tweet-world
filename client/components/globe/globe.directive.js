@@ -14,6 +14,24 @@ angular.module('tweetWorldApp')
           return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
         }
 
+        function colorFn(x) {
+          var r = 0, g = 0, b = 0;
+
+          if (x == 1) {
+            // 1 match is blue
+            b = 255;
+          }
+          else if (x <= 4) {
+            // up to 4 matches should be green
+            g = 255;
+          } else {
+            // more than 4 matches is red
+            r = 255;
+          }
+
+          return rgbToHex(r, g, b);
+        }
+
         var div = element.find('div')[0];
         var urls = {
           earth: 'assets/images/world.jpg',
@@ -26,7 +44,7 @@ angular.module('tweetWorldApp')
         globe.init();
         var lastAdd = new Date();
 
-        scope.$watchCollection('points', function(newValue, oldValue) {
+        scope.$watchCollection('points', function (newValue, oldValue) {
           var newPoints = _.difference(newValue, oldValue);
 
           if (newValue.length == 0) {
@@ -37,26 +55,22 @@ angular.module('tweetWorldApp')
               var point = {
                 color: '#0000FF',
                 size: 2,
-                height: 20,
+                height: 10,
                 lat: newPoints[i][0],
                 lon: newPoints[i][1]
               };
 
               // get the number of points at the same co-ords
-              var matchingPoints = _.filter(oldValue.concat(newValue), function(existingPoint) {
+              var matchingPoints = _.filter(oldValue.concat(newValue), function (existingPoint) {
                 return ((existingPoint[0] == point.lat && existingPoint[1] == point.lon));
               });
 
               // do some modification if there were matches
               if (matchingPoints.length > 1) {
-                console.log("MATCH FOUND!");
+                // base height on number of matches
                 point.height = matchingPoints.length * point.height;
-                //point.size = matchingPoints.length * point.size;
-
-                // get the colour
-                var r = 0;
-                if (70 * matchingPoints.length < 255) {r = 70 * matchingPoints.length} else {r = 255}
-                point.color = rgbToHex(r, 0, 0);
+                // base color on number of matches
+                point.color = colorFn(matchingPoints.length);
               }
 
               var timeDiff = new Date() - lastAdd;
