@@ -246,7 +246,7 @@ angular.module('tweetWorldApp')
         {
           y: "rate",
           label: "Tweets / second",
-          color: "#3F51B5",
+          color: "#1A237E",
           axis: "y",
           type: "area",
           thickness: "2px",
@@ -256,7 +256,7 @@ angular.module('tweetWorldApp')
         {
           y: "locationRate",
           label: "Location Tweets / second",
-          color: "#E91E63",
+          color: "#536DFE",
           axis: "y",
           type: "area",
           thickness: "2px",

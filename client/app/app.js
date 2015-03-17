@@ -20,5 +20,5 @@ angular.module('tweetWorldApp', [
     // setup the theme
     $mdThemingProvider.theme('default')
       .primaryPalette('indigo')
-      .accentPalette('pink');
+      .accentPalette('indigo');
   });
