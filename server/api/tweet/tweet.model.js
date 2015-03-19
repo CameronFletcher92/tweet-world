@@ -8,6 +8,7 @@ var TweetSchema = new Schema({
   userpic: String,
   text: { type: String, index: true },
   coordinates: { type: [Number], index: '2dsphere' },
+  place: String,
   date: {type: Date, index: true }
 });
 

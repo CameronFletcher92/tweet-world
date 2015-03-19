@@ -124,7 +124,7 @@
 
     <md-content layout="column" layout-padding>
       <div style="height: 600px;">
-        <globe points="heatPoints" point-size="3" height-per-point="10" height-cap="100"></globe>
+        <globe points="heatPoints" point-size="3" height-per-point="3" height-cap="100"></globe>
       </div>
     </md-content>
   </md-card>
@@ -160,7 +160,8 @@
             <div class="md-tile-content" layout-margin layout-padding>
               <h3>{{tweet.text}}</h3>
 
-              <p ng-show="tweet.coordinates"> ({{tweet.coordinates[0]}}, {{tweet.coordinates[1]}})</p>
+              <p ng-show="tweet.place"> ({{tweet.place}})</p>
+              <!--<p ng-show="tweet.coordinates"> ({{tweet.coordinates[0]}}, {{tweet.coordinates[1]}})</p>-->
             </div>
           </md-item-content>
         </md-item>

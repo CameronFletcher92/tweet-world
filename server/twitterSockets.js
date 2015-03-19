@@ -1,36 +1,37 @@
 'use strict';
 
 
-module.exports = function(socketio) {
+module.exports = function (socketio) {
   var Twit = require('twit');
   var Tweet = require('./api/tweet/tweet.model');
   var searches = {};
 
   var T = new Twit({
-    consumer_key:         'iOz8PaIppbytlYo8VuNgaYLkY',
-    consumer_secret:      'B2a4OfTVgRqtipNy3I8EiMvkC2UuVjt3JQdkWPIsbbEaYb6gRG',
-    access_token:         '3060943338-vP7jnQP87rMnLsO6mLQhrN92KGCVcaP0geHGQtw',
-    access_token_secret:  'KgDPamWRmLlF8mAemSqvsO2fzL3gCpoh24a87O4RGaAUH'
+    consumer_key: 'iOz8PaIppbytlYo8VuNgaYLkY',
+    consumer_secret: 'B2a4OfTVgRqtipNy3I8EiMvkC2UuVjt3JQdkWPIsbbEaYb6gRG',
+    access_token: '3060943338-vP7jnQP87rMnLsO6mLQhrN92KGCVcaP0geHGQtw',
+    access_token_secret: 'KgDPamWRmLlF8mAemSqvsO2fzL3gCpoh24a87O4RGaAUH'
   });
 
   function formatTweet(searchText, tweet) {
-    var fTweet =  {
+    var fTweet = {
       searchText: searchText.toLowerCase(),
       userpic: tweet.user.profile_image_url,
       text: tweet.text,
       date: tweet.created_at
     };
 
+
     // get the tweet co-ordinates
-    if (tweet.coordinates) {
-      // directly
-      fTweet.coordinates = tweet.coordinates.coordinates;
-    } else if (tweet.place) {
-      // or from place's bounding box (center)
+    if (tweet.place) {
+      // get from the bounding box of the place (rather than direct co-ords)
+      // this will allow better stacking (care less about small differences in co-ords
       var box = tweet.place.bounding_box.coordinates[0];
       var lng = (box[0][0] + box[1][0]) / 2;
       var lat = (box[0][1] + box[3][1]) / 2;
       fTweet.coordinates = [lng, lat];
+      fTweet.place = tweet.place.full_name;
+
     } else {
       // or null it
       fTweet.coordinates = null;
@@ -41,8 +42,8 @@ module.exports = function(socketio) {
 
 
 // Sockets
-  socketio.on('connection', function(socket) {
-    socket.on('stopTweetStream', function(searchText) {
+  socketio.on('connection', function (socket) {
+    socket.on('stopTweetStream', function (searchText) {
       if (searches[socket.id]) {
         console.log("stopping stream on socket: " + socket.id);
         searches[socket.id].stream.stop();
@@ -50,7 +51,7 @@ module.exports = function(socketio) {
       }
     });
 
-    socket.on('startTweetStream', function(searchText) {
+    socket.on('startTweetStream', function (searchText) {
       // convert searchText to lowercase
       searchText = searchText.toLowerCase();
 
@@ -71,7 +72,7 @@ module.exports = function(socketio) {
       searches[socket.id] = {stream: stream, searchText: searchText};
 
       // set up the stream handlers
-      stream.on('tweet', function(tweet) {
+      stream.on('tweet', function (tweet) {
         // format the tweet to match our db
         var formattedTweet = formatTweet(searches[socket.id].searchText, tweet);
 
@@ -92,25 +93,25 @@ module.exports = function(socketio) {
         }
       });
 
-      stream.on('limit', function(limitMessage) {
+      stream.on('limit', function (limitMessage) {
         console.log('tweet limit for socket: ' + socket.id + ' reached');
       });
 
-      stream.on('warning', function(warning) {
+      stream.on('warning', function (warning) {
         console.log('warning', warning);
       });
 
-      stream.on('reconnect', function(request, response, connectInterval) {
+      stream.on('reconnect', function (request, response, connectInterval) {
         console.log('stream reconnecting in ' + connectInterval + ' (' + response.statusCode + ')');
       });
 
-      stream.on('disconnect', function(disconnectMessage) {
+      stream.on('disconnect', function (disconnectMessage) {
         console.log('disconnect', disconnectMessage);
       });
     });
 
     // socket disconnect, make sure the stream is stopped
-    socket.on('disconnect', function() {
+    socket.on('disconnect', function () {
       // stop the old stream if it exists
       if (searches[socket.id]) {
         console.log("stopping stream on socket: " + socket.id);
