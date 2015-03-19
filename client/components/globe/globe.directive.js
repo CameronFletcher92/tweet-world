@@ -26,15 +26,21 @@ angular.module('tweetWorldApp')
         function colorFn(x) {
           var r = 0, g = 0, b = 0;
 
-          if (x == 1) {
-            // 1 match is blue
+          if (x <= 3) {
+            // 3 match is blue
             b = 255;
-          }
-          else if (x <= 4) {
-            // up to 4 matches should be green
+          } else if (x <= 6) {
+            // up to 6 matches should blue-green
+            g = 150;
+            b = 150;
+          } else if (x <= 9) {
+            // up to 9 matches should be green
             g = 255;
+          } else if (x <= 12) {
+            // up to 12 matches should be green-red
+            g = 150;
+            r = 150;
           } else {
-            // more than 4 matches is red
             r = 255;
           }
 
