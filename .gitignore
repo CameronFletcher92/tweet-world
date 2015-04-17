@@ -3,6 +3,7 @@ public
 .tmp
 .sass-cache
 .idea
+.DS_Store
 client/bower_components/*
 !client/bower_components/webgl-heatmap-leaflet
 !client/bower_components/realtime-webgl-globe
