@@ -83,9 +83,9 @@ var Globe = function(container, urls) {
     container.addEventListener('resize', handle.resize, false);
 
     // Scroll for Chrome
-    //container.addEventListener('mousewheel', handle.scroll, false);
+    container.addEventListener('mousewheel', handle.scroll, false);
     // Scroll for Firefox
-    //container.addEventListener('DOMMouseScroll', handle.scroll, false);
+    container.addEventListener('DOMMouseScroll', handle.scroll, false);
 
     // Bootstrap render
     animate();
